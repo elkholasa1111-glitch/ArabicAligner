@@ -5,16 +5,16 @@
   "limitations": "Synthetic samples. Egyptian refers to script wording, not a validated Egyptian voice/accent.",
   "files": {
     "msa.txt": {
-      "sha256": "54849833e89d7227e9828360e877ba92e22cd0cb05064d8a4363a6040dffc991",
-      "bytes": 211
+      "sha256": "286112a8405b8fcc43b52afc920a9f10ad07b5e8197662843774ffca432c1c57",
+      "bytes": 210
     },
     "msa.wav": {
       "sha256": "a0af6635a24be0173cd7a971fa2c7e2ba9ccbf3f92346cf6cc80978279c42c64",
       "bytes": 620082
     },
     "egyptian.txt": {
-      "sha256": "0e8ae00f8083e0e239d9cce02f8100f9c25012409e3ba99fa8a5c502055aba9a",
-      "bytes": 184
+      "sha256": "4418b21b90e5f80a9bf15ef388bf8f7e249451abef8a3e711511f9d8595c8c28",
+      "bytes": 183
     },
     "egyptian.wav": {
       "sha256": "38e32bc4695baccc2f8e859fdc993b07b54e349215a11482d3d273dd59b6494d",

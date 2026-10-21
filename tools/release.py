@@ -5,6 +5,7 @@ import os
 from pathlib import Path
 import platform
 import shutil
+import socket
 import subprocess
 import sys
 import tempfile
@@ -28,6 +29,9 @@ def accept(executable, reports, work):
     home.mkdir(parents=True)
     env.update({'HOME': str(home), 'HF_HOME': str(home / 'hf'), 'HF_HUB_CACHE': str(home / 'hf/hub'),
                 'HF_HUB_OFFLINE': '1', 'HF_HUB_DISABLE_TELEMETRY': '1'})
+    # Establish that the test endpoint is reachable before restricting the app.
+    with socket.create_connection(('1.1.1.1', 443), timeout=10):
+        pass
     if sys.platform == 'darwin':
         env['PATH'] = '/usr/bin:/bin:/usr/sbin:/sbin'
         env['QT_QPA_PLATFORM'] = 'cocoa'
@@ -94,6 +98,8 @@ def main():
     from tools.payload_inventory import inspect
     payload = ROOT / ('dist/ArabicAligner.app' if sys.platform == 'darwin' else 'dist/ArabicAligner')
     (reports / 'payload.json').write_text(json.dumps(inspect(payload), indent=2))
+    from tools.security_scan import scan
+    scan(payload, reports / 'gitleaks-payload.json')
     stem = 'ArabicAligner_' + APP_VERSION
     if sys.platform == 'darwin':
         bundle = ROOT / 'dist/ArabicAligner.app'

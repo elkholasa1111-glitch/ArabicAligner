@@ -29,7 +29,7 @@ def main():
                 "files": {}}
     for name, text in TEXTS.items():
         reference = examples / f"{name}.txt"
-        reference.write_text(text + "\n", encoding="utf-8")
+        reference.write_text(text + "\n", encoding="utf-8", newline="\n")
         # Some Windows eSpeak builds use narrow-character file APIs. Keep the
         # generator's temporary input/output paths separate from the Arabic
         # filesystem-path tests of ArabicAligner itself.

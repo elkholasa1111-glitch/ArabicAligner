@@ -45,12 +45,20 @@ def main(argv):
     from app.resources import resource_roots
     qt = QApplication.instance() or QApplication([])
     report.update({"version": APP_VERSION, "qt_platform": qt.platformName(), "models": list(MODEL_NAMES)})
+    if report['frozen'] and qt.platformName() != ('cocoa' if sys.platform == 'darwin' else 'windows'):
+        raise RuntimeError('Release acceptance must use the native GUI platform')
     from PySide6.QtCore import QLibraryInfo
     report['qt_build'] = QLibraryInfo.build()
     if report["frozen"]:
         from tools.audit_media import inspect
         report["linked_media"] = inspect()
-        from app.core.audio import convert_to_wav16k
+        from app.core.audio import convert_to_wav16k, find_ffmpeg
+        import subprocess
+        executable_version = subprocess.check_output([find_ffmpeg(), '-version'], text=True,
+            creationflags=subprocess.CREATE_NO_WINDOW if os.name == 'nt' else 0)
+        if 'ffmpeg version 8.1.3' not in executable_version or '--disable-gpl' not in executable_version:
+            raise RuntimeError('Unexpected frozen FFmpeg executable build')
+        report['ffmpeg_executable_version'] = executable_version.splitlines()[:3]
         import wave
         report['media_formats'] = {}
         for extension in ('mp3', 'm4a', 'flac'):
@@ -78,6 +86,7 @@ def main(argv):
     window = MainWindow()
     window.show()
     jobs = [("invalid", selected[0])] + [(example, model) for model in selected for example in ("msa", "egyptian")]
+    jobs += [('silence', selected[0]), ('mismatch', selected[0])]
     state = {"index": -1, "active": False, "started": time.monotonic(), "message_error": None}
     deadline = time.monotonic() + 15 * 60
 
@@ -103,6 +112,17 @@ def main(argv):
         if name == "invalid":
             audio.write_bytes(b"This is not a media file.")
             text = "هذا اختبار فشل وإعادة محاولة."
+        elif name == 'silence':
+            import wave
+            with wave.open(str(audio), 'wb') as sound:
+                sound.setnchannels(1)
+                sound.setsampwidth(2)
+                sound.setframerate(16000)
+                sound.writeframes(b'\0' * (16000 * 2 * 4))
+            text = 'هذا نص غير منطوق في تسجيل صامت.'
+        elif name == 'mismatch':
+            shutil.copy2(args.examples / 'msa.wav', audio)
+            text = 'كوكب صحراء شجرة جزيرة مطر بحر.'
         else:
             shutil.copy2(args.examples / f"{name}.wav", audio)
             text = (args.examples / f"{name}.txt").read_text(encoding="utf-8-sig").strip()
@@ -146,8 +166,12 @@ def main(argv):
                 result = window.last_result
                 if " ".join(cue.text for cue in result.cues).split() != state["text"].split():
                     raise RuntimeError("The original reference words or diacritics changed")
-                if result.asr_word_count <= 0 or not result.cues:
+                if (name != 'silence' and result.asr_word_count <= 0) or not result.cues:
                     raise RuntimeError("No speech was recognized in the synthetic fixture")
+                if name == 'silence' and (result.asr_word_count != 0 or result.low_conf_rate < .99):
+                    raise RuntimeError('Silence did not produce the documented low-confidence fallback')
+                if name == 'mismatch' and result.low_conf_rate < .5:
+                    raise RuntimeError('Mismatched text was not marked predominantly low-confidence')
                 if not all(0 <= c.start < c.end <= result.audio_duration + .001 for c in result.cues):
                     raise RuntimeError("Invalid cue times")
                 if not all(a.end <= b.start for a, b in zip(result.cues, result.cues[1:])):
