@@ -65,8 +65,16 @@ def accept(executable, reports, work):
             raise RuntimeError('Installed GUI acceptance failed')
         for example in ('msa', 'egyptian'):
             output = reports / f'cli-{example}.srt'
-            run([*prefix, executable, '--cli', '-a', ROOT / 'examples' / f'{example}.wav', '-t',
-                 ROOT / 'examples' / f'{example}.txt', '-o', output, '--model', 'small'], env)
+            cli_work = work / 'CLI \u0645\u0633\u0627\u0631 \u0639\u0631\u0628\u064a \u0645\u0639 \u0645\u0633\u0627\u0641\u0627\u062a' / example
+            cli_work.mkdir(parents=True)
+            cli_audio = cli_work / '\u0635\u0648\u062a sample.wav'
+            cli_text = cli_work / '\u0627\u0644\u0646\u0635 \u0627\u0644\u0623\u0635\u0644\u064a.txt'
+            cli_output = cli_work / '\u0645\u0644\u0641 \u0627\u0644\u062a\u0631\u062c\u0645\u0629.srt'
+            shutil.copy2(ROOT / 'examples' / f'{example}.wav', cli_audio)
+            shutil.copy2(ROOT / 'examples' / f'{example}.txt', cli_text)
+            run([*prefix, executable, '--cli', '-a', cli_audio, '-t', cli_text,
+                 '-o', cli_output, '--model', 'small'], env)
+            shutil.copy2(cli_output, output)
             if not output.is_file() or '-->' not in output.read_text(encoding='utf-8-sig'):
                 raise RuntimeError('Frozen CLI did not produce SRT')
         # A second process proves reopening with native Qt and model resolution.

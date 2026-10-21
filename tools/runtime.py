@@ -17,3 +17,9 @@ if sys.stdout is None or sys.stderr is None or gui_log:
         stream = open(os.devnull, 'w')
     sys.stdout = stream if gui_log else (sys.stdout or stream)
     sys.stderr = stream if gui_log else (sys.stderr or stream)
+if sys.platform == 'win32':
+    # Frozen Python isolates PYTHONIOENCODING. Arabic CLI paths must also work
+    # when output is redirected to a pipe rather than a Windows console.
+    for output_stream in (sys.stdout, sys.stderr):
+        if hasattr(output_stream, 'reconfigure'):
+            output_stream.reconfigure(encoding='utf-8', errors='backslashreplace')
