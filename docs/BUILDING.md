@@ -10,6 +10,7 @@ python -m venv .venv
 # macOS: source .venv/bin/activate
 python -m pip install -r requirements-build.txt
 python tools/build_native_media.py
+python tools/build_native_numpy.py
 python -m pip install -r requirements.txt
 python tools/prepare_release_assets.py
 python tools/release.py
@@ -28,3 +29,5 @@ Output: `release/`, `verification/<platform>/`. Exact build/CI links and tested 
 Windows MSVC clean builds disable incremental depfile generation with make command overrides because the upstream awk recipe loses a backslash in this environment. Compilation remains enabled; the exact make options are recorded in native-build.json. Use a fresh build after source changes.
 
 An exact earlier controlled-media cache key can be supplied on intentional runs after reviewing a platform-specific recipe change. Cached wheels must pass validate_media_cache.py (source pins, platform, flags, checksum and linked license). Default keys include the whole builder and source lock; no automatic broad fallback is used.
+
+The same NumPy 1.26.4 source is compiled for release: macOS links system Accelerate and requires 13.3+, Windows uses the bundled numerical fallback. This avoids redistributing opaque GNU numerical runtimes from upstream wheels. CTranslate2 CPU model kernels are unchanged. The builder validates matrix multiplication and SVD; native application acceptance remains required.

@@ -74,6 +74,7 @@ def segment(
         return []
 
     cues: list[Cue] = []
+    long_pause_after: set[int] = set()
     cur: list = []
     cur_start = words[0].start
 
@@ -147,6 +148,8 @@ def segment(
                 end_t = min(w.end + 0.25, w.end + max(0.0, pause_after * 0.5))
             end_t = min(end_t, cur[0].start + max_dur)
             flush(end_t)
+            if nxt and pause_after >= pause_break:
+                long_pause_after.add(len(cues) - 1)
 
     # post: merge too-short cues (likely split by music/noise) forward
     merged: list[Cue] = []
@@ -159,6 +162,7 @@ def segment(
             combined = (c.text + " " + nxt.text).strip()
             if (
                 (nxt.end - c.start) <= max_dur
+                and i not in long_pause_after
                 and (nxt.start - c.end) < pause_break
                 and len(combined) <= max_chars
                 and len(combined.split()) <= max_words

@@ -138,10 +138,13 @@ def main():
                     run([installed / 'unins000.exe', '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART'])
         (reports / 'signature.txt').write_text('Unsigned: no Authenticode certificate used.\n')
     shutil.copy2(ROOT / 'native/build-info.json', reports / 'native-build.json')
+    shutil.copy2(ROOT / 'native-numpy/build-info.json', reports / 'numpy-build.json')
     shutil.make_archive(str(output / ('verification-' + sys.platform)), 'zip', reports)
     # Mirror exact corresponding sources. Heavy files are release assets, never Git objects.
     items = json.loads((ROOT / 'third_party/sources.lock.json').read_text())
     for name, item in items.items():
+        if item.get('platforms') and sys.platform not in item['platforms']:
+            continue
         destination = output / item['url'].rsplit('/', 1)[1]
         cached = ROOT / '.build/sources' / destination.name
         if cached.exists():

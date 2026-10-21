@@ -40,6 +40,13 @@ class BehaviorRegressions(unittest.TestCase):
         self.assertTrue(all(word.conf < .35 for word in mapped))
         self.assertTrue(all(0 <= word.start <= word.end <= 3 for word in mapped))
 
+    def test_padding_does_not_erase_a_long_pause_boundary(self):
+        from app.core.mapper import TimedWord
+        words = [TimedWord('نعم', .5, .9, 1), TimedWord('نعم', 1.6, 2., 1)]
+        cues = segment(words, pause_break=.6)
+        self.assertEqual(len(cues), 2)
+        self.assertLess(cues[0].end, cues[1].start)
+
     def test_silence_fallback_is_explicitly_low_confidence(self):
         mapped = map_reference_to_asr(["مَرْحَبًا"], ["مرحبا"], [False], [], [], 2)
         self.assertEqual(mapped[0].display, "مَرْحَبًا")

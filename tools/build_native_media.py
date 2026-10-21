@@ -150,6 +150,11 @@ def main():
                    if sys.platform == "win32" else "") + 'make' + make_options + ' -j "$1" && make install'
     run([bash, "--noprofile", "--norc", "-c", make_script, "_", str(min(4, os.cpu_count() or 2))],
         cwd=ffmpeg, env=environment)
+    if sys.platform == 'win32':
+        # FFmpeg installs MSVC import libraries beside the DLLs; PyAV's
+        # --ffmpeg-dir SDK convention looks in lib/ for them.
+        for library in (PREFIX / 'bin').glob('*.lib'):
+            shutil.copy2(library, PREFIX / 'lib' / library.name)
     # PyAV's supported --ffmpeg-dir build argument links the same controlled SDK.
     environment["PATH"] = str(PREFIX / "bin") + os.pathsep + environment.get("PATH", "")
     environment["DYLD_LIBRARY_PATH"] = str(PREFIX / "lib")
