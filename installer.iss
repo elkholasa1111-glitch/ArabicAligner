@@ -11,10 +11,11 @@ AppId={code:GetInstallationId}
 UsePreviousLanguage=no
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
+VersionInfoVersion=1.2.0.1
 AppPublisher={#MyAppPublisher}
 LicenseFile=LICENSE
 DefaultDirName={localappdata}\Programs\ArabicAligner Preview
-DefaultGroupName={#MyAppName}
+DefaultGroupName=ArabicAligner Preview
 OutputDir={#OutDir}
 OutputBaseFilename=ArabicAligner_1.2.0-beta.1_Windows_x64_Setup
 Compression=lzma2/max
@@ -43,8 +44,8 @@ Type: filesandordirs; Name: "{app}\offline_assets\models\models--Systran--faster
 Type: filesandordirs; Name: "{app}\offline_assets\models\models--Systran--faster-whisper-medium"
 
 [Icons]
-Name: "{group}\{#MyAppName}"; Filename: "{app}\ArabicAligner.exe"
-Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\ArabicAligner.exe"; Tasks: desktopicon
+Name: "{group}\ArabicAligner Preview"; Filename: "{app}\ArabicAligner.exe"
+Name: "{autodesktop}\ArabicAligner Preview"; Filename: "{app}\ArabicAligner.exe"; Tasks: desktopicon
 
 [Tasks]
 Name: desktopicon; Description: "Create a &desktop icon"; Flags: unchecked

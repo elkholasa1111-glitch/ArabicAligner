@@ -49,6 +49,11 @@ def main(argv):
         raise RuntimeError('Release acceptance must use the native GUI platform')
     from PySide6.QtCore import QLibraryInfo
     report['qt_build'] = QLibraryInfo.build()
+    import ctranslate2
+    report['ctranslate2_version'] = ctranslate2.__version__
+    report['cpu_compute_types'] = sorted(ctranslate2.get_supported_compute_types('cpu'))
+    if 'int8' not in report['cpu_compute_types']:
+        raise RuntimeError('The release runtime does not support the required CPU INT8 mode')
     if report["frozen"]:
         from tools.audit_media import inspect
         report["linked_media"] = inspect()

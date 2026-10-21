@@ -2,7 +2,7 @@
 
 Candidate: 1.2.0-beta.1. This page records evidence, not a blanket claim of all-platform support.
 
-As of 2026-10-21, local Windows source verification passed all 24 regression tests. A real native Windows Qt source run processed both original synthetic fixtures using small, saved SRT preserving the reference words/diacritics, and recovered from invalid audio. This development run used the preserved development environment; it does not certify the new packaged media runtime. Examples returned nonzero low-confidence fractions and require timing review.
+As of 2026-10-22 (Cairo; 2026-10-21 UTC), local Windows source verification passed all 26 regression tests. A real native Windows Qt source run processed both original synthetic fixtures using small, saved SRT preserving the reference words/diacritics, and recovered from invalid audio. This development run used the preserved development environment; it does not certify the new packaged media runtime. Examples returned nonzero low-confidence fractions and require timing review.
 
 Native release builds, installed-copy checks, OS-network-denial results, resolved dependencies, screenshots, and hashes are recorded in platform verification assets on the release once successful. Until those assets and the matching installer are present and reviewed, packaged verification remains outstanding. The older private 1.1.1 Mac build is retained separately and is not proof for this release.
 

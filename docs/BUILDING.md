@@ -11,6 +11,8 @@ python -m venv .venv
 python -m pip install -r requirements-build.txt
 python tools/build_native_media.py
 python tools/build_native_numpy.py
+python -m pip install pybind11==3.0.1
+python tools/build_native_ctranslate2.py
 python -m pip install -r requirements.txt
 python tools/prepare_release_assets.py
 python tools/release.py
@@ -31,3 +33,5 @@ Windows MSVC clean builds disable incremental depfile generation with make comma
 An exact earlier controlled-media cache key can be supplied on intentional runs after reviewing a platform-specific recipe change. Cached wheels must pass validate_media_cache.py (source pins, platform, flags, checksum and linked license). Default keys include the whole builder and source lock; no automatic broad fallback is used.
 
 The same NumPy 1.26.4 source is compiled for release: macOS links system Accelerate and requires 13.3+, Windows uses the bundled numerical fallback. This avoids redistributing opaque GNU numerical runtimes from upstream wheels. CTranslate2 CPU model kernels are unchanged. The builder validates matrix multiplication and SVD; native application acceptance remains required.
+
+CTranslate2 4.8.2 is built from the pinned source commit with CPU submodules. Ruy provides INT8 operations; Mac float operations use system Accelerate. Intel MKL/oneDNN/CUDA are disabled. Compiler OpenMP preserves CPU parallelism: LLVM libomp on Mac (`brew install libomp` for development) and MSVC OpenMP on Windows. This avoids accepting or redistributing Intel Developer Tools components. The source snapshot, submodule revisions, configure options and original component notices accompany the package. Build CTranslate2 before installing runtime requirements so pip retains the controlled wheel. Native acceptance checks INT8 availability and real recognition; performance still depends on hardware.

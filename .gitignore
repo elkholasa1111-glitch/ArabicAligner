@@ -15,6 +15,7 @@ Output-macOS/
 verification/*
 native/
 native-numpy/
+native-ctranslate2/
 .build/
 wheelhouse/
 repaired-wheelhouse/

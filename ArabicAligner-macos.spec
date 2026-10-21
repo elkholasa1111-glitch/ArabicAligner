@@ -16,7 +16,7 @@ pyz = PYZ(a.pure)
 exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name='ArabicAligner', debug=False,
     strip=False, upx=False, console=False, target_arch='x86_64', codesign_identity=None)
 coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name='ArabicAligner')
-app = BUNDLE(coll, name='ArabicAligner.app', bundle_identifier='com.elkholasa.arabicaligner.preview',
+app = BUNDLE(coll, name='ArabicAligner Preview.app', bundle_identifier='com.elkholasa.arabicaligner.preview',
     version=BUNDLE_VERSION, info_plist={'CFBundleDisplayName': 'ArabicAligner ' + APP_VERSION,
     'CFBundleShortVersionString': BUNDLE_VERSION, 'LSMinimumSystemVersion': '13.3',
     'NSHighResolutionCapable': True})

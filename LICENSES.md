@@ -9,7 +9,7 @@ The original application is licensed under [MIT](LICENSE), copyright Elkholasa. 
 | FFmpeg 8.1.3 controlled shared build | LGPL-3.0-or-later; https://ffmpeg.org/legal.html; exact source/build lock and recipe in this repository |
 | PyAV 17.1.0 | BSD-3-Clause; https://github.com/PyAV-Org/PyAV; links the controlled FFmpeg SDK |
 | faster-whisper 1.2.1 | MIT; https://github.com/SYSTRAN/faster-whisper |
-| CTranslate2 4.8.2 | MIT; https://github.com/OpenNMT/CTranslate2 |
+| CTranslate2 4.8.2 controlled CPU build | MIT plus preserved CPU-submodule notices; https://github.com/OpenNMT/CTranslate2 |
 | ONNX Runtime 1.23.2 | MIT and bundled third-party notices; https://github.com/microsoft/onnxruntime |
 | Bundled Silero VAD ONNX model from faster-whisper | MIT, Silero Team; https://github.com/snakers4/silero-vad; notice under third_party/licenses |
 | NumPy 1.26.4 | BSD-3-Clause and bundled native-library notices; https://numpy.org/doc/1.26/license.html |
@@ -21,3 +21,5 @@ The original application is licensed under [MIT](LICENSE), copyright Elkholasa. 
 | PyInstaller bootloader | GPL with distribution exception; https://pyinstaller.org/en/stable/license.html |
 
 Qt and FFmpeg remain dynamic components. The build excludes unrelated Qt PDF/SVG/QML/Quick/virtual keyboard plugins and opaque imageio FFmpeg executables. Source archives are release assets, not Git history. The supplied models are exactly those the platform GUI offers. No CTC/MMS/XLS-R or TTS runtime is implemented or bundled. Transitive and compiler-runtime notices accompany the actual packages; Windows notices are not assumed to describe macOS.
+
+CTranslate2 source/submodule and compiler OpenMP notices are collected under `licenses/ctranslate2-source` in each native package. Intel developer runtime components from the old wheels are excluded from the controlled builds; no Intel EULA is accepted for the maintainer. Windows standard compiler runtime files retain their vendor redistribution terms.

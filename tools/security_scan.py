@@ -45,8 +45,30 @@ def scan(path, report, history=False):
     if history:
         command.append('--log-opts=--all')
     # Large weight files are binary data; source/history are scanned separately.
-    subprocess.run(command, check=True)
-    if json.loads(report.read_text()):
+    result = subprocess.run(command)
+    if result.returncode not in (0, 1):
+        raise RuntimeError('Gitleaks did not finish successfully')
+    findings = json.loads(report.read_text())
+    reviewed, unresolved = [], []
+    for finding in findings:
+        source = Path(finding['File'])
+        # Reviewed against Microsoft v1.23.2 upstream: this line assigns the
+        # public enum onnx.TensorProto.INT64 to map_key_type, not a credential.
+        known_enum = (not history and finding['RuleID'] == 'generic-api-key'
+            and finding['StartLine'] == 2198 and finding['EndLine'] == 2198
+            and source.as_posix().endswith('/onnxruntime/tools/symbolic_shape_infer.py')
+            and hashlib.sha256(source.read_text(encoding='utf-8').encode()).hexdigest()
+                == '869c5b3247775d201751f72e989b66ae5deec58fb5dd65094f5533400d52051e')
+        if known_enum:
+            reviewed.append({'rule': finding['RuleID'], 'file': 'onnxruntime/tools/symbolic_shape_infer.py',
+                'line': 2198, 'classification': 'false positive: public ONNX tensor enum',
+                'upstream': 'https://github.com/microsoft/onnxruntime/blob/v1.23.2/onnxruntime/python/tools/symbolic_shape_infer.py'})
+        else:
+            unresolved.append(finding)
+    report.with_name(report.stem + '-review.json').write_text(json.dumps({
+        'raw_findings': len(findings), 'reviewed_false_positives': reviewed,
+        'unresolved_findings': len(unresolved)}, indent=2))
+    if unresolved:
         raise RuntimeError('Review redacted secret findings before publication')
 
 

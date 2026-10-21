@@ -26,6 +26,8 @@ def inputs(root):
     for filename in ('LICENSE', 'LICENSES.md', 'README.md', 'README.ar.md'):
         datas.append((str(root / filename), '.'))
     datas += [(str(root / 'third_party'), 'third_party'), (str(assets / 'MANIFEST.txt'), 'offline_assets')]
+    datas += [(str(root / 'native-ctranslate2/licenses'), 'licenses/ctranslate2-source'),
+              (str(root / 'native-ctranslate2/build-info.json'), 'third_party/ctranslate2-build')]
     for folder in MODEL_FOLDERS:
         model = assets / 'models' / folder
         if not model.is_dir():

@@ -31,3 +31,5 @@ Windows غير موقّع بشهادة. تطبيق الماك بتوقيع مح�
 [شرح البناء والتطوير](docs/BUILDING.md) · [المعمارية](docs/ARCHITECTURE.md) · [حل المشكلات](docs/TROUBLESHOOTING.md) · [المساهمة](CONTRIBUTING.md) · [الدعم](SUPPORT.md).
 
 كود التطبيق الأصلي مرخّص MIT؛ المثبت ككل ليس MIT. المكتبات والنماذج لها تراخيص منفصلة موضحة في [الإشعارات](LICENSES.md) و[تعليمات المصدر والاستبدال](docs/LICENSING.md). لا يوجد ضمان استجابة للدعم .
+
+تطبيق الماك داخل DMG اسمه `ArabicAligner Preview.app` حتى يمكن إبقاؤه بجانب النسخة القديمة. اختصارات Windows التجريبية تحمل Preview أيضًا.

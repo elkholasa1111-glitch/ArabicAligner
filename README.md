@@ -16,7 +16,7 @@ The first unified public release is **1.2.0-beta.1**, a preview combining the ex
 Apple Silicon, Windows ARM, Linux, and every OS version within the build targets are not validated. Intel does not imply universal. CPU inference can be slow on older laptops; the target MacBook Air 2015 itself still requires a user hardware check. No CUDA or GPU setup is required.
 
 1. Download the matching installer from [Releases](https://github.com/elkholasa1111-glitch/ArabicAligner/releases). Compare its SHA-256 with the platform's `SHA256SUMS` file. Keep the installer and corresponding license/source assets available.
-2. Windows: run the installer for your user. macOS: open the DMG and copy ArabicAligner.app into Applications, keeping an older copy separately if needed. For security prompts, follow [troubleshooting](docs/TROUBLESHOOTING.md); do not disable device protections.
+2. Windows: run the installer for your user. macOS: open the DMG and copy ArabicAligner Preview.app into Applications, keeping an older copy separately if needed. For security prompts, follow [troubleshooting](docs/TROUBLESHOOTING.md); do not disable device protections.
 3. Browse to or drop a local audio file. Paste the exact script or load a UTF-8 TXT. Choose small (fast) or, on Windows, large-v3-turbo.
 4. Click **Align & Create SRT**. The application saves UTF-8 SRT beside the audio. Use **Open SRT**, **Open Folder**, or **Save As**. Open the SRT with a subtitle editor or your video editor and review its timing.
 

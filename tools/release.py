@@ -29,6 +29,9 @@ def accept(executable, reports, work):
     home.mkdir(parents=True)
     env.update({'HOME': str(home), 'HF_HOME': str(home / 'hf'), 'HF_HUB_CACHE': str(home / 'hf/hub'),
                 'HF_HUB_OFFLINE': '1', 'HF_HUB_DISABLE_TELEMETRY': '1'})
+    if sys.platform == 'win32':
+        env.update({'USERPROFILE': str(home), 'LOCALAPPDATA': str(home / 'AppData/Local'),
+                    'APPDATA': str(home / 'AppData/Roaming')})
     # Establish that the test endpoint is reachable before restricting the app.
     with socket.create_connection(('1.1.1.1', 443), timeout=10):
         pass
@@ -74,6 +77,8 @@ def accept(executable, reports, work):
         result['os_isolation'] = 'sandbox-exec deny network*' if sys.platform == 'darwin' else 'Windows outbound application firewall rule'
         (reports / 'installed-summary.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
     finally:
+        for log in home.rglob('ArabicAligner.log'):
+            shutil.copy2(log, reports / 'runtime.log')
         if sys.platform == 'win32':
             run(['powershell', '-NoProfile', '-File', ROOT / 'tools/test_firewall.ps1', '-Name', rule, '-Remove'])
 
@@ -96,13 +101,13 @@ def main():
     spec = 'ArabicAligner-macos.spec' if sys.platform == 'darwin' else 'ArabicAligner.spec'
     run([sys.executable, '-m', 'PyInstaller', spec, '--noconfirm', '--clean'])
     from tools.payload_inventory import inspect
-    payload = ROOT / ('dist/ArabicAligner.app' if sys.platform == 'darwin' else 'dist/ArabicAligner')
+    payload = ROOT / ('dist/ArabicAligner Preview.app' if sys.platform == 'darwin' else 'dist/ArabicAligner')
     (reports / 'payload.json').write_text(json.dumps(inspect(payload), indent=2))
     from tools.security_scan import scan
     scan(payload, reports / 'gitleaks-payload.json')
     stem = 'ArabicAligner_' + APP_VERSION
     if sys.platform == 'darwin':
-        bundle = ROOT / 'dist/ArabicAligner.app'
+        bundle = ROOT / 'dist/ArabicAligner Preview.app'
         dmg = output / f'{stem}_macOS_Intel.dmg'
         with tempfile.TemporaryDirectory(prefix='arabicaligner-dmg-') as temp:
             stage = Path(temp) / 'image'
@@ -120,6 +125,7 @@ def main():
                 installed.parent.mkdir()
                 run(['/usr/bin/ditto', mount / bundle.name, installed])
                 accept(installed / 'Contents/MacOS/ArabicAligner', reports, Path(temp) / 'acceptance')
+                run(['/usr/bin/codesign', '--verify', '--deep', '--strict', installed])
                 (reports / 'signature.txt').write_text(subprocess.check_output(
                     ['/usr/bin/codesign', '-dv', '--verbose=2', str(installed)], stderr=subprocess.STDOUT, text=True))
             finally:
@@ -139,6 +145,9 @@ def main():
         (reports / 'signature.txt').write_text('Unsigned: no Authenticode certificate used.\n')
     shutil.copy2(ROOT / 'native/build-info.json', reports / 'native-build.json')
     shutil.copy2(ROOT / 'native-numpy/build-info.json', reports / 'numpy-build.json')
+    shutil.copy2(ROOT / 'native-ctranslate2/build-info.json', reports / 'ctranslate2-build.json')
+    for archive in (ROOT / 'native-ctranslate2').glob('*source*.tar.gz'):
+        shutil.copy2(archive, output / archive.name)
     shutil.make_archive(str(output / ('verification-' + sys.platform)), 'zip', reports)
     # Mirror exact corresponding sources. Heavy files are release assets, never Git objects.
     items = json.loads((ROOT / 'third_party/sources.lock.json').read_text())
