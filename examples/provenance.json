@@ -19,6 +19,22 @@
     "egyptian.wav": {
       "sha256": "38e32bc4695baccc2f8e859fdc993b07b54e349215a11482d3d273dd59b6494d",
       "bytes": 571146
+    },
+    "msa.mp3": {
+      "sha256": "0cf03eb6da7af86ac3cdbc3d67e24e167b6d39daba51abdcdb9fd57159183044",
+      "bytes": 113309
+    },
+    "msa.m4a": {
+      "sha256": "c2a5e3db6c635be7dac3fa71a3326c17a1e42152ac8782f8117ea2aee035ff39",
+      "bytes": 118129
+    },
+    "msa.flac": {
+      "sha256": "048324188065d8818fb706045832c6afc8311eebe8eeda013e583e4462fd26b4",
+      "bytes": 279390
     }
+  },
+  "format_variants": {
+    "origin": "Transcodes of the original msa.wav fixture; same CC0 dedication",
+    "encoder_build": "FFmpeg 7.1-essentials_build-www.gyan.dev (generation tool only; not redistributed)"
   }
 }

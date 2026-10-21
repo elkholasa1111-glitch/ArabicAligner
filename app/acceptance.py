@@ -45,9 +45,23 @@ def main(argv):
     from app.resources import resource_roots
     qt = QApplication.instance() or QApplication([])
     report.update({"version": APP_VERSION, "qt_platform": qt.platformName(), "models": list(MODEL_NAMES)})
+    from PySide6.QtCore import QLibraryInfo
+    report['qt_build'] = QLibraryInfo.build()
     if report["frozen"]:
         from tools.audit_media import inspect
         report["linked_media"] = inspect()
+        from app.core.audio import convert_to_wav16k
+        import wave
+        report['media_formats'] = {}
+        for extension in ('mp3', 'm4a', 'flac'):
+            converted = Path(convert_to_wav16k(str(args.examples / ('msa.' + extension))))
+            try:
+                with wave.open(str(converted), 'rb') as sound:
+                    assert sound.getframerate() == 16000 and sound.getnchannels() == 1
+                    assert sound.getnframes() > 16000
+                    report['media_formats'][extension] = 'decoded to 16 kHz mono WAV'
+            finally:
+                converted.unlink(missing_ok=True)
     if args.models:
         selected = args.models.split(",")
         if any(name not in MODEL_NAMES for name in selected):

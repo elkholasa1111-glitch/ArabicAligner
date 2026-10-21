@@ -1,0 +1,14 @@
+{
+  "Whisper-LICENSE.txt": {
+    "url": "https://raw.githubusercontent.com/openai/whisper/main/LICENSE",
+    "sha256": "b5d65a59060e68c4ff940e1eddfa6f94b2d68fdf58ed7f4dd57721c997e35e9d"
+  },
+  "model-small-README.md": {
+    "url": "https://huggingface.co/Systran/faster-whisper-small/raw/536b0662742c02347bc0e980a01041f333bce120/README.md",
+    "sha256": "329373481008c7c38654aff8ecdcf0163c211557cc7ba8e2ef6f2f84b4f75ec8"
+  },
+  "model-turbo-README.md": {
+    "url": "https://huggingface.co/mobiuslabsgmbh/faster-whisper-large-v3-turbo/raw/0a363e9161cbc7ed1431c9597a8ceaf0c4f78fcf/README.md",
+    "sha256": "b3068692728faed23580cce5cd569fc47ff76c690c032b2641ffd5554ea64d8f"
+  }
+}

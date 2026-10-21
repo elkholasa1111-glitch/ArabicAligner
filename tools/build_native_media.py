@@ -107,8 +107,12 @@ def main():
                       "--extra-ldflags=-mmacosx-version-min=13.0"]
         script = 'exec ./configure "$@"'
     run([bash, "--noprofile", "--norc", "-c", script, "_", *configure], cwd=ffmpeg, env=environment)
+    # Fresh Windows builds do not need incremental .d files. MSVC's generated
+    # awk depfile recipe loses a backslash with this upstream configure/make
+    # combination; disable only depfile generation, not compilation or checks.
+    make_options = ' CCDEP= CXXDEP= HOSTCCDEP= ASDEP=' if sys.platform == 'win32' else ''
     make_script = ('export PATH="$(cygpath -u "$ARABICALIGNER_MSVC_BIN"):/usr/bin:$PATH"; '
-                   if sys.platform == "win32" else "") + 'make -j "$1" && make install'
+                   if sys.platform == "win32" else "") + 'make' + make_options + ' -j "$1" && make install'
     run([bash, "--noprofile", "--norc", "-c", make_script, "_", str(min(4, os.cpu_count() or 2))],
         cwd=ffmpeg, env=environment)
     # PyAV's supported --ffmpeg-dir build argument links the same controlled SDK.
@@ -129,7 +133,7 @@ def main():
     run([sys.executable, "-m", "pip", "install", "--force-reinstall", "--no-deps", final_wheel])
     info = {"platform": sys.platform, "architecture": platform.machine(), "ffmpeg": items["ffmpeg"],
             "pyav": items["pyav"], "configure": configure, "wheel_sha256": sha256(final_wheel),
-            "external_codec_libraries": False}
+            "external_codec_libraries": False, "make_options": make_options.strip()}
     (PREFIX / "build-info.json").write_text(json.dumps(info, indent=2), encoding="utf-8")
     print("Controlled native media build complete.", flush=True)
 

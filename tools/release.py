@@ -87,9 +87,13 @@ def main():
     (reports / 'environment.json').write_text(json.dumps(environment, indent=2))
     (reports / 'dependencies.txt').write_text(subprocess.check_output([sys.executable, '-m', 'pip', 'freeze'], text=True))
     run([sys.executable, '-m', 'unittest', 'discover', '-s', 'tests', '-v'])
+    run([sys.executable, 'tools/check_source.py'])
     run([sys.executable, 'tools/audit_media.py'])
     spec = 'ArabicAligner-macos.spec' if sys.platform == 'darwin' else 'ArabicAligner.spec'
     run([sys.executable, '-m', 'PyInstaller', spec, '--noconfirm', '--clean'])
+    from tools.payload_inventory import inspect
+    payload = ROOT / ('dist/ArabicAligner.app' if sys.platform == 'darwin' else 'dist/ArabicAligner')
+    (reports / 'payload.json').write_text(json.dumps(inspect(payload), indent=2))
     stem = 'ArabicAligner_' + APP_VERSION
     if sys.platform == 'darwin':
         bundle = ROOT / 'dist/ArabicAligner.app'

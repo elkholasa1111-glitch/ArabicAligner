@@ -24,3 +24,5 @@ Standard CI runs source regressions only. Heavy packaging is an intentional `wor
 The shared bundle collector is `packaging/bundle.py`. It collects actual package notices and removes unrelated Qt PDF/SVG/QML/Quick/virtual-keyboard plugin roots. Qt and FFmpeg libraries remain dynamically linked and replaceable. Check the actual final native inventory and license files; configuration intent alone is insufficient.
 
 Output: `release/`, `verification/<platform>/`. Exact build/CI links and tested platforms belong in `VERIFICATION.md`. Older packaging helpers are compatibility entry points, not alternative release recipes.
+
+Windows MSVC clean builds disable incremental depfile generation with make command overrides because the upstream awk recipe loses a backslash in this environment. Compilation remains enabled; the exact make options are recorded in native-build.json. Use a fresh build after source changes.

@@ -20,3 +20,5 @@ files with `python tools/generate_examples.py --espeak /path/to/espeak-ng`.
 verified. The synthetic samples are smoke/behavior fixtures, not a speech-quality
 or timing-accuracy benchmark. Inspect actual release test results before drawing
 conclusions about recognition quality.
+
+The small MP3, M4A and FLAC files are transcodes of the original MSA WAV, under the same CC0 dedication. Their generation encoder is recorded in provenance.json and is not included in the application. Native acceptance checks decode these actual inputs with the release media runtime.
