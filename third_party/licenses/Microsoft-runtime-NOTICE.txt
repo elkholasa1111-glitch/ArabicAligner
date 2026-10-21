@@ -1,0 +1,13 @@
+Windows compiler runtime notice
+
+Some Windows binaries dynamically use Microsoft Visual C++ and OpenMP runtime
+files, including MSVCP, VCRUNTIME and VCOMP components. These retain Microsoft
+copyright and redistribution terms. They are not relicensed under the application's
+MIT license. The build uses the licensed Visual Studio environment supplied by the
+GitHub-hosted Windows runner, Python and Qt distributions. Preserve vendor notices
+and signatures; consult the applicable Visual Studio distributable-code terms:
+https://visualstudio.microsoft.com/license-terms/
+
+The native payload inventory identifies the actual runtime files and architecture.
+No Microsoft developer installation, paid certificate, or new account is required
+on the end user's machine for the complete application package.

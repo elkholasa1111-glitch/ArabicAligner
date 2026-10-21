@@ -11,7 +11,7 @@ The first unified public release is **1.2.0-beta.1**, a preview combining the ex
 | Platform | Asset name | Models | Status and requirements |
 | --- | --- | --- | --- |
 | Windows x64 | `ArabicAligner_1.2.0-beta.1_Windows_x64_Setup.exe` | small; large-v3-turbo | Unsigned. Windows 10/11 x64 build target; see actual tested OS in verification. Preview installs separately from 1.1.1. |
-| macOS Intel x86_64 | `ArabicAligner_1.2.0-beta.1_macOS_Intel.dmg` | small only | Ad-hoc signing, no Developer ID or notarization. macOS 13.3+ build target; native verification uses macOS 15 Intel. |
+| macOS Intel x86_64 | `ArabicAligner_1.2.0-beta.1_macOS_Intel.dmg` | small only | Ad-hoc signing, no Developer ID or notarization. macOS 15+ package target; native verification uses macOS 15 Intel. |
 
 Apple Silicon, Windows ARM, Linux, and every OS version within the build targets are not validated. Intel does not imply universal. CPU inference can be slow on older laptops; the target MacBook Air 2015 itself still requires a user hardware check. No CUDA or GPU setup is required.
 

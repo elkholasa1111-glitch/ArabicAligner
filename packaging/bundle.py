@@ -2,7 +2,7 @@
 import importlib.metadata
 from pathlib import Path
 import sys
-from PyInstaller.utils.hooks import collect_all
+from PyInstaller.utils.hooks import collect_all, collect_delvewheel_libs_directory
 
 
 def inputs(root):
@@ -14,6 +14,8 @@ def inputs(root):
         datas += d
         binaries += b
         hidden += h
+    if sys.platform == 'win32':
+        datas, binaries = collect_delvewheel_libs_directory('ctranslate2', datas=datas, binaries=binaries)
     for distribution in importlib.metadata.distributions():
         for relative in distribution.files or []:
             if any(part in relative.name.upper() for part in ('LICENSE', 'COPYING', 'NOTICE')):

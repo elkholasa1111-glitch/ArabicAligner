@@ -15,8 +15,15 @@ on:
         description: Optional exact earlier trusted SDK cache key, after platform recipe review
         required: false
         default: ''
+      ctranslate2_cache_key:
+        description: Optional exact earlier controlled CPU runtime cache after platform recipe review
+        required: false
+        default: ''
 permissions:
   contents: read
+env:
+  PYTHONUTF8: '1'
+  PYTHONIOENCODING: utf-8
 jobs:
   package:
     # Only intentional trusted runs. PR source checks have no publishing rights.
@@ -103,7 +110,7 @@ jobs:
         uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: native-ctranslate2
-          key: ct2-${{ runner.os }}-x64-${{ hashFiles('tools/build_native_ctranslate2.py', 'third_party/ctranslate2.lock.json') }}
+          key: ${{ inputs.ctranslate2_cache_key || format('ct2-{0}-x64-{1}', runner.os, hashFiles('tools/build_native_ctranslate2.py', 'third_party/ctranslate2.lock.json')) }}
       - name: Build controlled CTranslate2 CPU runtime
         run: python tools/build_native_ctranslate2.py
       - name: Save controlled CTranslate2

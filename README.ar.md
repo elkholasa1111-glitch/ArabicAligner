@@ -13,7 +13,7 @@
 | Windows x64 | `ArabicAligner_1.2.0-beta.1_Windows_x64_Setup.exe` | small السريع وlarge-v3-turbo |
 | macOS Intel x86_64 | `ArabicAligner_1.2.0-beta.1_macOS_Intel.dmg` | small السريع فقط |
 
-Windows غير موقّع بشهادة. تطبيق الماك بتوقيع محلي ad-hoc، دون Developer ID أو notarization. ليس universal ولم يُختبر Apple Silicon أو Linux أو Windows ARM. هدف البناء Windows 10/11 x64 وmacOS 13.3 فأحدث، لكن النسخ المختبرة فعلًا مسجلة في [التحقق](docs/VERIFICATION.md). الاختبار على Mac Intel حديث لا يثبت الأداء على MacBook Air 2015؛ يلزم تجربته على الجهاز نفسه.
+Windows غير موقّع بشهادة. تطبيق الماك بتوقيع محلي ad-hoc، دون Developer ID أو notarization. ليس universal ولم يُختبر Apple Silicon أو Linux أو Windows ARM. هدف البناء Windows 10/11 x64 وmacOS 15 فأحدث، لكن النسخ المختبرة فعلًا مسجلة في [التحقق](docs/VERIFICATION.md). الاختبار على Mac Intel حديث لا يثبت الأداء على MacBook Air 2015؛ يلزم تجربته على الجهاز نفسه.
 
 1. قارن SHA-256 بملف `SHA256SUMS` الخاص بالنظام في الإصدار.
 2. ثبّت Windows لحسابك؛ النسخة التجريبية منفصلة عن القديمة. على الماك افتح DMG وانسخ التطبيق إلى Applications، مع حفظ النسخة القديمة إن وجدت.

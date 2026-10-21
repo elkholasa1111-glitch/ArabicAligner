@@ -13,6 +13,8 @@ import time
 import urllib.request
 
 ROOT = Path(__file__).resolve().parents[1]
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8', errors='backslashreplace')
 sys.path.insert(0, str(ROOT))
 from app.version import APP_VERSION
 from tools.build_native_media import sha256

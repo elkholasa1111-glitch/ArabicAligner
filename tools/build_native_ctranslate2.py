@@ -48,13 +48,13 @@ def main():
             omp = subprocess.check_output(['brew', '--prefix', 'libomp'], text=True).strip()
             omp_metadata = json.loads(subprocess.check_output(['brew', 'info', '--json=v2', 'libomp'], text=True))
             options += ['-DWITH_ACCELERATE=ON', '-DCMAKE_OSX_ARCHITECTURES=x86_64',
-                        '-DCMAKE_OSX_DEPLOYMENT_TARGET=13.3', '-DCMAKE_PREFIX_PATH=' + omp,
+                        '-DCMAKE_OSX_DEPLOYMENT_TARGET=15.0', '-DCMAKE_PREFIX_PATH=' + omp,
                         '-DOpenMP_C_FLAGS=-Xpreprocessor;-fopenmp;-I' + omp + '/include',
                         '-DOpenMP_CXX_FLAGS=-Xpreprocessor;-fopenmp;-I' + omp + '/include',
                         '-DOpenMP_C_LIB_NAMES=omp', '-DOpenMP_CXX_LIB_NAMES=omp',
                         '-DOpenMP_omp_LIBRARY=' + omp + '/lib/libomp.dylib']
-            env.update({'MACOSX_DEPLOYMENT_TARGET': '13.3', 'ARCHFLAGS': '-arch x86_64',
-                        '_PYTHON_HOST_PLATFORM': 'macosx-13.3-x86_64', 'DYLD_LIBRARY_PATH': str(prefix / 'lib')})
+            env.update({'MACOSX_DEPLOYMENT_TARGET': '15.0', 'ARCHFLAGS': '-arch x86_64',
+                        '_PYTHON_HOST_PLATFORM': 'macosx-15.0-x86_64', 'DYLD_LIBRARY_PATH': str(prefix / 'lib')})
         else:
             options += ['-A', 'x64', '-DWITH_ACCELERATE=OFF']
         run(['cmake', '-S', source, '-B', build, *options], env=env)
