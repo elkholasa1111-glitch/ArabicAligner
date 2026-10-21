@@ -38,7 +38,7 @@ There is currently no cancellation button. Closing is deferred while a job runs.
 python run.py --cli -a examples/msa.wav -t examples/msa.txt -o example.srt --model small
 ```
 
-Install the source environment and model/media assets first: [development](docs/DEVELOPMENT.md), [native builds](docs/BUILDING.md), [architecture](docs/ARCHITECTURE.md). Frozen applications also accept `--cli`; on Windows console output goes to the application log when launched without a console. The output SRT is the result to check.
+Install the source environment and model/media assets first: [development](docs/DEVELOPMENT.md), [native builds](docs/BUILDING.md), [architecture](docs/ARCHITECTURE.md). Frozen applications also accept `--cli`. Run the Windows CLI from a terminal to see progress; a desktop GUI launch hides its own console and records diagnostic output in the application log. The output SRT is the result to check.
 
 ## Privacy, licensing, and contributing
 

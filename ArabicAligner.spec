@@ -17,5 +17,7 @@ a = Analysis([str(ROOT / 'run.py')], pathex=[str(ROOT)], binaries=binaries, data
 trim_qt(a)
 pyz = PYZ(a.pure)
 exe = EXE(pyz, a.scripts, [], exclude_binaries=True, name='ArabicAligner',
-    debug=False, strip=False, upx=False, console=False)
+    # Keep valid standard handles for native libraries and CLI diagnostics.
+    # A desktop launch hides its own console; an existing terminal stays usable.
+    debug=False, strip=False, upx=False, console=True, hide_console='hide-early')
 coll = COLLECT(exe, a.binaries, a.datas, strip=False, upx=False, name='ArabicAligner')

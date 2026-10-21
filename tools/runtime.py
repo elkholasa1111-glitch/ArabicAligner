@@ -4,7 +4,9 @@ import sys
 os.environ['HF_HUB_OFFLINE'] = '1'
 os.environ['HF_HUB_DISABLE_TELEMETRY'] = '1'
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
-if sys.stdout is None or sys.stderr is None:
+gui_log = sys.platform == 'win32' and not any(flag in sys.argv for flag in
+    ('--cli', '--acceptance-test', '--self-test'))
+if sys.stdout is None or sys.stderr is None or gui_log:
     from pathlib import Path
     directory = (Path.home() / 'Library/Logs/ArabicAligner' if sys.platform == 'darwin'
                  else Path(os.environ.get('LOCALAPPDATA', Path.home())) / 'ArabicAligner/Logs')
@@ -13,5 +15,5 @@ if sys.stdout is None or sys.stderr is None:
         stream = (directory / 'ArabicAligner.log').open('a', encoding='utf-8', buffering=1)
     except OSError:
         stream = open(os.devnull, 'w')
-    sys.stdout = sys.stdout or stream
-    sys.stderr = sys.stderr or stream
+    sys.stdout = stream if gui_log else (sys.stdout or stream)
+    sys.stderr = stream if gui_log else (sys.stderr or stream)

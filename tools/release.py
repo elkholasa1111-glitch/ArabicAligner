@@ -20,9 +20,9 @@ from app.version import APP_VERSION
 from tools.build_native_media import sha256
 
 
-def run(args, env=None):
+def run(args, env=None, timeout=3600):
     print('+ ' + ' '.join(map(str, args)), flush=True)
-    subprocess.run(list(map(str, args)), cwd=ROOT, env=env, check=True, timeout=3600)
+    subprocess.run(list(map(str, args)), cwd=ROOT, env=env, check=True, timeout=timeout)
 
 
 def accept(executable, reports, work):
@@ -51,6 +51,13 @@ def accept(executable, reports, work):
              '-Name', rule, '-Program', executable])
         prefix = []
     try:
+        if sys.platform == 'win32':
+            # Expose bootstrap/CLI failures before a long GUI sequence. These
+            # are the installed executable and bundled models, not source Python.
+            run([executable, '--cli', '-a', ROOT / 'examples/msa.wav', '-t', ROOT / 'examples/msa.txt',
+                 '-o', reports / 'bootstrap-cli.srt', '--model', 'small'], env, timeout=600)
+            run([executable, '--self-test', '--native-gui', '--report', reports / 'bootstrap.json'],
+                env, timeout=180)
         run([*prefix, executable, '--acceptance-test', '--examples', ROOT / 'examples', '--report', reports / 'gui.json',
              '--work-dir', work / 'processing', '--expect-network-blocked'], env)
         result = json.loads((reports / 'gui.json').read_text(encoding='utf-8'))
@@ -141,7 +148,8 @@ def main():
         setup = output / f'{stem}_Windows_x64_Setup.exe'
         with tempfile.TemporaryDirectory(prefix='arabicaligner-installed-') as temp:
             installed = Path(temp) / 'Arabic install تجربة'
-            run([setup, '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/VERIFICATION=1', '/DIR=' + str(installed)])
+            run([setup, '/VERYSILENT', '/SUPPRESSMSGBOXES', '/NORESTART', '/VERIFICATION=1',
+                 '/LOG=' + str(reports / 'install.log'), '/DIR=' + str(installed)], timeout=600)
             try:
                 accept(installed / 'ArabicAligner.exe', reports, Path(temp) / 'acceptance')
             finally:
