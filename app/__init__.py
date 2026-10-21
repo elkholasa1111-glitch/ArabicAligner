@@ -1,0 +1,1 @@
+"""ArabicAligner package."""

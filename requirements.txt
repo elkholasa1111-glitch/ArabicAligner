@@ -1,0 +1,10 @@
+# Native releases first install the locally built av wheel; see docs/BUILDING.md.
+PySide6_Essentials==6.11.2
+shiboken6==6.11.2
+faster-whisper==1.2.1
+ctranslate2==4.8.2
+onnxruntime==1.23.2
+av==17.1.0
+tokenizers==0.23.2
+huggingface-hub==1.31.0
+numpy==1.26.4

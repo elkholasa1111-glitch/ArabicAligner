@@ -1,0 +1,14 @@
+name: Feature request
+description: Describe a use case and the improvement it needs
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and proposed behavior
+      description: Explain the local workflow. Do not include private content.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives and platform requirements

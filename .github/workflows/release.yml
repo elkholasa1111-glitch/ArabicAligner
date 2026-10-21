@@ -1,0 +1,69 @@
+name: Native release candidate
+on:
+  workflow_dispatch:
+    inputs:
+      release_tag:
+        description: Existing draft release tag at this exact commit
+        required: true
+        default: v1.2.0-beta.1
+permissions:
+  contents: read
+jobs:
+  package:
+    # Only intentional trusted runs. PR source checks have no publishing rights.
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-2022, macos-15-intel]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 150
+    steps:
+      - uses: actions/checkout@f548e57e544e1ff5a4c46bf1e1b8685f8e4a348a
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@ec52d0af729a7c50ced4261d17a07916f43f5b8e
+        with:
+          python-version: '3.11.9'
+          architecture: x64
+      - name: Require draft release at the checked-out commit
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          test "$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft)" = true
+          test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" --jq .object.sha)" = "$GITHUB_SHA"
+      - uses: msys2/setup-msys2@452bb7dc9a4f5deb681978c9ac2b2b19c2c24f85
+        if: runner.os == 'Windows'
+        with:
+          update: false
+          install: make diffutils
+          path-type: inherit
+      - uses: ilammy/msvc-dev-cmd@460a772e4cf7358f9f2f23773240813e40e7a894
+        if: runner.os == 'Windows'
+        with:
+          arch: x64
+      - run: python -m pip install -r requirements-build.txt
+      - name: Build FFmpeg and PyAV from pinned sources
+        run: python tools/build_native_media.py
+      - run: python -m pip install -r requirements.txt
+      - run: python tools/prepare_release_assets.py
+      - name: Build, install, and exercise native application
+        run: python tools/release.py
+      - name: Attach verified files to draft only
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_TAG: ${{ inputs.release_tag }}
+        run: |
+          gh release upload "$RELEASE_TAG" release/* --clobber
+      - name: Diagnostic reports
+        if: always()
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: reports-${{ matrix.os }}
+          path: verification/
+          retention-days: 3
+          if-no-files-found: ignore

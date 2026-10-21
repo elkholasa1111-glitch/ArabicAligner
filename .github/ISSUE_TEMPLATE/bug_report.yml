@@ -1,0 +1,26 @@
+name: Bug report
+description: Reproduce a problem without private recordings or logs
+body:
+  - type: input
+    id: version
+    attributes:
+      label: Version and package filename
+    validations:
+      required: true
+  - type: input
+    id: system
+    attributes:
+      label: OS, OS version, architecture, and model
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps, expected behavior, and actual behavior
+      description: Use original synthetic examples. Do not upload private audio, transcripts, account details, or full logs.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Minimal permitted example or sanitized error

@@ -1,0 +1,3 @@
+# Native macOS Intel uses the shared pinned runtime.
+-r requirements.txt
+-r requirements-build.txt

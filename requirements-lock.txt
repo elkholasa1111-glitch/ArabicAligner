@@ -1,0 +1,4 @@
+# Direct dependency pins. The release records the complete resolved environment.
+# This is not a hash-locked transitive dependency set.
+-r requirements.txt
+-r requirements-build.txt
