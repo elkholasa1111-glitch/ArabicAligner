@@ -11,6 +11,10 @@ on:
         type: choice
         options: [both, windows, macos]
         default: both
+      media_cache_key:
+        description: Optional exact earlier trusted SDK cache key, after platform recipe review
+        required: false
+        default: ''
 permissions:
   contents: read
 jobs:
@@ -59,14 +63,13 @@ jobs:
             native
             repaired-wheelhouse
             .build/sources
-          key: media-${{ runner.os }}-x64-${{ hashFiles('tools/build_native_media.py', 'third_party/sources.lock.json', 'requirements-build.txt') }}
+          key: ${{ inputs.media_cache_key || format('media-{0}-x64-{1}', runner.os, hashFiles('tools/build_native_media.py', 'third_party/sources.lock.json', 'requirements-build.txt')) }}
       - name: Build FFmpeg and PyAV from pinned sources
         if: steps.media-cache.outputs.cache-hit != 'true'
         run: python tools/build_native_media.py
       - name: Install cached controlled PyAV
         if: steps.media-cache.outputs.cache-hit == 'true'
-        shell: bash
-        run: python -m pip install --no-deps repaired-wheelhouse/av-*.whl
+        run: python tools/validate_media_cache.py
       - name: Save controlled media before application acceptance
         if: steps.media-cache.outputs.cache-hit != 'true'
         uses: actions/cache/save@0057852bfaa89a56745cba8c7296529d2fc39830

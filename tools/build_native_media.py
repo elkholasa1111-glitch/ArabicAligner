@@ -126,6 +126,10 @@ def main():
         config = ffmpeg / 'ffbuild/config.mak'
         lines = config.read_text().splitlines()
         for index, line in enumerate(lines):
+            # The configure probe uses @/dev/null, which MSVC cannot open.
+            # Its linker/librarian do support ordinary response files.
+            if line.startswith('RESPONSE_FILES='):
+                lines[index] = 'RESPONSE_FILES=yes'
             if line.startswith('SLIB_CREATE_DEF_CMD='):
                 if '$(OBJS)' not in line:
                     raise RuntimeError('Unexpected Windows export recipe')
@@ -164,7 +168,8 @@ def main():
     run([sys.executable, "-m", "pip", "install", "--force-reinstall", "--no-deps", final_wheel])
     info = {"platform": sys.platform, "architecture": platform.machine(), "ffmpeg": items["ffmpeg"],
             "pyav": items["pyav"], "configure": configure, "wheel_sha256": sha256(final_wheel),
-            "external_codec_libraries": False, "make_options": make_options.strip()}
+            "external_codec_libraries": False, "make_options": make_options.strip(),
+            "windows_response_files": sys.platform == 'win32'}
     (PREFIX / "build-info.json").write_text(json.dumps(info, indent=2), encoding="utf-8")
     print("Controlled native media build complete.", flush=True)
 
