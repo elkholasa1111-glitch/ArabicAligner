@@ -49,6 +49,11 @@ def main():
             omp_metadata = json.loads(subprocess.check_output(['brew', 'info', '--json=v2', 'libomp'], text=True))
             options += ['-DWITH_ACCELERATE=ON', '-DCMAKE_OSX_ARCHITECTURES=x86_64',
                         '-DCMAKE_OSX_DEPLOYMENT_TARGET=15.0', '-DCMAKE_PREFIX_PATH=' + omp,
+                        # Pinned ruy/platform.h disables all x86 SIMD on Apple
+                        # due to an Xcode <=10.2 issue. Modern Apple Clang can
+                        # compile its ISA-specific files; runtime CPU dispatch
+                        # still selects supported kernels (no -march=native).
+                        '-DCMAKE_CXX_FLAGS=-DRUY_FORCE_ENABLE_X86_ENHANCEMENTS',
                         '-DOpenMP_C_FLAGS=-Xpreprocessor;-fopenmp;-I' + omp + '/include',
                         '-DOpenMP_CXX_FLAGS=-Xpreprocessor;-fopenmp;-I' + omp + '/include',
                         '-DOpenMP_C_LIB_NAMES=omp', '-DOpenMP_CXX_LIB_NAMES=omp',
