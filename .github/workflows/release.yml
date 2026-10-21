@@ -51,6 +51,9 @@ jobs:
         run: |
           test "$(gh release view "$RELEASE_TAG" --json isDraft --jq .isDraft)" = true
           test "$(gh api "repos/$GITHUB_REPOSITORY/git/ref/tags/$RELEASE_TAG" --jq .object.sha)" = "$GITHUB_SHA"
+      - name: Check Windows offline-test enforcement before heavy packaging
+        if: runner.os == 'Windows'
+        run: python tools/firewall_preflight.py
       - uses: msys2/setup-msys2@ec48f7c5447b3140e2b088413ae3a55687bccb6e
         if: runner.os == 'Windows'
         with:

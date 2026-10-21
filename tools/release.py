@@ -26,6 +26,9 @@ def run(args, env=None):
 
 
 def accept(executable, reports, work):
+    # tempfile can return an 8.3 Windows path (RUNNER~1). WFP expects the
+    # canonical existing executable path when creating an application filter.
+    executable = executable.resolve(strict=True)
     env = os.environ.copy()
     home = work / 'empty-home'
     home.mkdir(parents=True)
