@@ -5,6 +5,7 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import struct
 import time
 import urllib.request
 
@@ -49,17 +50,31 @@ def main():
 
     def verify(name):
         asset, digest, count = assets[name], hashlib.sha256(), 0
+        header = b''
         with request(asset['browser_download_url']) as stream:
             status = stream.status
             while chunk := stream.read(1024 * 1024):
+                if not header:
+                    header = chunk[:4096]
                 digest.update(chunk)
                 count += len(chunk)
         actual = digest.hexdigest()
         assert status == 200 and count == asset['size'] and actual == expected[name]
         if asset.get('digest'):
             assert asset['digest'] == 'sha256:' + actual
-        return {'name': name, 'url': asset['browser_download_url'], 'http_status': status,
-                'bytes': count, 'sha256': actual, 'authenticated': False}
+        result = {'name': name, 'url': asset['browser_download_url'], 'http_status': status,
+                  'bytes': count, 'sha256': actual, 'authenticated': False}
+        if name.endswith('.exe'):
+            assert header[:2] == b'MZ'
+            pe = struct.unpack_from('<I', header, 0x3c)[0]
+            assert header[pe:pe + 4] == b'PE\0\0'
+            optional = pe + 24
+            magic = struct.unpack_from('<H', header, optional)[0]
+            directories = optional + (96 if magic == 0x10b else 112)
+            certificate_offset, certificate_size = struct.unpack_from('<II', header, directories + 4 * 8)
+            result['authenticode_attached_certificate'] = bool(certificate_offset or certificate_size)
+            assert not result['authenticode_attached_certificate'], 'Review unexpected signing state'
+        return result
 
     with ThreadPoolExecutor(max_workers=2) as pool:
         binaries = list(pool.map(verify, names))
