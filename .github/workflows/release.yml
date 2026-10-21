@@ -114,7 +114,7 @@ jobs:
         uses: actions/cache/restore@0057852bfaa89a56745cba8c7296529d2fc39830
         with:
           path: native-ctranslate2
-          key: ${{ inputs.ctranslate2_cache_key || format('ct2-{0}-x64-{1}', runner.os, hashFiles('tools/build_native_ctranslate2.py', 'third_party/ctranslate2.lock.json')) }}
+          key: ${{ inputs.ctranslate2_cache_key || format('ct2-{0}-x64-{1}', runner.os, hashFiles('tools/build_native_ctranslate2.py', 'third_party/ctranslate2.lock.json', 'third_party/patches/ctranslate2-windows-ruy-teardown.patch')) }}
       - name: Build controlled CTranslate2 CPU runtime
         run: python tools/build_native_ctranslate2.py
       - name: Save controlled CTranslate2
@@ -125,6 +125,9 @@ jobs:
           key: ${{ steps.ct2-cache.outputs.cache-primary-key }}
       - run: python -m pip install -r requirements.txt
       - run: python tools/prepare_release_assets.py
+      - name: Verify real Windows model teardown twice before packaging
+        if: runner.os == 'Windows'
+        run: python tools/check_native_model.py
       - name: Build, install, and exercise native application
         run: python tools/release.py
       - name: Preserve candidate files in draft for verification and diagnosis

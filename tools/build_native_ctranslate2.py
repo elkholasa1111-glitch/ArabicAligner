@@ -28,15 +28,24 @@ def main():
     existing = list(repaired.glob('ctranslate2-4.8.2-*.whl'))
     info = directory / 'build-info.json'
     env = os.environ.copy()
+    patch = ROOT / 'third_party/patches/ctranslate2-windows-ruy-teardown.patch'
+    expected_patch = sha256(patch) if sys.platform == 'win32' else None
     if not existing:
         source = ROOT / '.build/ctranslate2-source'
         if not source.exists():
             run(['git', '-c', 'credential.helper=', 'clone', '--no-checkout', '--filter=blob:none', item['repo'], source])
+        run(['git', 'config', 'core.autocrlf', 'false'], cwd=source)
         run(['git', 'checkout', '--detach', item['commit']], cwd=source)
         if subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=source, text=True).strip() != item['commit']:
             raise RuntimeError('CTranslate2 source commit mismatch')
         run(['git', 'submodule', 'update', '--init', '--recursive', '--depth', '1',
              'third_party/spdlog', 'third_party/cpu_features', 'third_party/ruy'], cwd=source)
+        if sys.platform == 'win32':
+            already_applied = subprocess.run(['git', 'apply', '--reverse', '--check', str(patch)],
+                cwd=source, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL).returncode == 0
+            if not already_applied:
+                run(['git', 'apply', '--check', patch], cwd=source)
+                run(['git', 'apply', patch], cwd=source)
         prefix = directory / 'sdk'
         build = ROOT / '.build/ctranslate2-build'
         options = ['-DCMAKE_BUILD_TYPE=Release', '-DCMAKE_POLICY_VERSION_MINIMUM=3.5',
@@ -99,12 +108,15 @@ def main():
             (directory / 'openmp-source.json').write_text(json.dumps(omp_metadata, indent=2))
         info.write_text(json.dumps({'source': item, 'platform': sys.platform, 'configure': options,
             'submodules': subprocess.check_output(['git', 'submodule', 'status', '--recursive'], cwd=source, text=True),
-            'wheel_sha256': sha256(wheel), 'source_archive_sha256': sha256(archive)}, indent=2))
+            'wheel_sha256': sha256(wheel), 'source_archive_sha256': sha256(archive),
+            'windows_ruy_teardown_patch_sha256': expected_patch}, indent=2))
     else:
         wheel = existing[0]
     metadata = json.loads(info.read_text())
     if metadata['source'] != item or metadata['platform'] != sys.platform or sha256(wheel) != metadata['wheel_sha256']:
         raise RuntimeError('Controlled CTranslate2 cache mismatch')
+    if metadata.get('windows_ruy_teardown_patch_sha256') != expected_patch:
+        raise RuntimeError('Controlled CTranslate2 Windows lifetime patch mismatch; use a fresh native build directory')
     run([sys.executable, '-m', 'pip', 'install', '--no-deps', '--force-reinstall', wheel])
 
 

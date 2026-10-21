@@ -1,0 +1,69 @@
+--- a/src/cpu/backend.cc
++++ b/src/cpu/backend.cc
+@@ -1,3 +1,4 @@
++#include <memory>
+ #include "backend.h"
+ 
+ #include "ctranslate2/utils.h"
+@@ -106,10 +107,24 @@
+     }
+ 
+ #ifdef CT2_WITH_RUY
++#ifdef _WIN32
++    static thread_local std::unique_ptr<ruy::Context> local_ruy_context;
++
++    ruy::Context *get_ruy_context() {
++      if (!local_ruy_context)
++        local_ruy_context = std::make_unique<ruy::Context>();
++      return local_ruy_context.get();
++    }
++
++    void release_ruy_context() {
++      local_ruy_context.reset();
++    }
++#else
+     ruy::Context *get_ruy_context() {
+       static thread_local ruy::Context context;
+       return &context;
+     }
+ #endif
++#endif
+   }
+ }
+--- a/src/cpu/backend.h
++++ b/src/cpu/backend.h
+@@ -28,6 +28,9 @@
+     bool pack_gemm_weights(ComputeType compute_type);
+ #ifdef CT2_WITH_RUY
+     ruy::Context *get_ruy_context();
++#ifdef _WIN32
++    void release_ruy_context();
++#endif
+ #endif
+ 
+   }
+--- a/src/thread_pool.cc
++++ b/src/thread_pool.cc
+@@ -1,6 +1,10 @@
+ #include "ctranslate2/thread_pool.h"
+ 
+ #include "ctranslate2/utils.h"
++
++#if defined(_WIN32) && defined(CT2_WITH_RUY)
++#  include "cpu/backend.h"
++#endif
+ 
+ namespace ctranslate2 {
+ 
+@@ -120,6 +124,11 @@
+     }
+ 
+     finalize();
++#if defined(_WIN32) && defined(CT2_WITH_RUY)
++    // Joining Ruy helper threads from a DLL TLS destructor holds the Windows
++    // loader lock. Release them while this worker is still running normally.
++    cpu::release_ruy_context();
++#endif
+     local_worker = nullptr;
+   }
+ 
