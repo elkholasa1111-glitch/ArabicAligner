@@ -6,12 +6,12 @@ Synchronize an existing Arabic script with its recording and export editable SRT
 
 ## Start here
 
-The first unified public release is **1.2.0-beta.1**, a preview combining the existing Windows and Intel Mac editions. Download only assets listed on the release page; source archives are not installers. While a candidate is being built, an absent platform asset is not an available download. [Release verification](docs/VERIFICATION.md) distinguishes completed tests from outstanding work.
+The first unified public release is **[1.2.0-beta.1](https://github.com/elkholasa1111-glitch/ArabicAligner/releases/tag/v1.2.0-beta.1)**, a preview combining the existing Windows and Intel Mac editions. Start with the package for your platform below. Source archives are not installers. [Release verification](docs/VERIFICATION.md) records the actual native tests, generated SRTs, screenshots and limits.
 
 | Platform | Asset name | Models | Status and requirements |
 | --- | --- | --- | --- |
-| Windows x64 | `ArabicAligner_1.2.0-beta.1_Windows_x64_Setup.exe` | small; large-v3-turbo | Unsigned. Windows 10/11 x64 build target; see actual tested OS in verification. Preview installs separately from 1.1.1. |
-| macOS Intel x86_64 | `ArabicAligner_1.2.0-beta.1_macOS_Intel.dmg` | small only | Ad-hoc signing, no Developer ID or notarization. macOS 15+ package target; native verification uses macOS 15 Intel. |
+| Windows x64 | [ArabicAligner_1.2.0-beta.1_Windows_x64_Setup.exe](https://github.com/elkholasa1111-glitch/ArabicAligner/releases/download/v1.2.0-beta.1/ArabicAligner_1.2.0-beta.1_Windows_x64_Setup.exe) | small; large-v3-turbo | Unsigned. Windows 10/11 x64 build target; see actual tested OS in verification. Preview installs separately from 1.1.1. |
+| macOS Intel x86_64 | [ArabicAligner_1.2.0-beta.1_macOS_Intel.dmg](https://github.com/elkholasa1111-glitch/ArabicAligner/releases/download/v1.2.0-beta.1/ArabicAligner_1.2.0-beta.1_macOS_Intel.dmg) | small only | Ad-hoc signing, no Developer ID or notarization. macOS 15+ package target; native verification uses macOS 15 Intel. |
 
 Apple Silicon, Windows ARM, Linux, and every OS version within the build targets are not validated. Intel does not imply universal. CPU inference can be slow on older laptops; the target MacBook Air 2015 itself still requires a user hardware check. No CUDA or GPU setup is required.
 
@@ -20,7 +20,7 @@ Apple Silicon, Windows ARM, Linux, and every OS version within the build targets
 3. Browse to or drop a local audio file. Paste the exact script or load a UTF-8 TXT. Choose small (fast) or, on Windows, large-v3-turbo.
 4. Click **Align & Create SRT**. The application saves UTF-8 SRT beside the audio. Use **Open SRT**, **Open Folder**, or **Save As**. Open the SRT with a subtitle editor or your video editor and review its timing.
 
-MP3, WAV, M4A, OGG, FLAC, MP4, AAC, and WMA are offered by the file picker. Actual support depends on the included FFmpeg decoders; encrypted/DRM media is not supported. WAV examples are covered by native acceptance checks. Other input formats need format-specific validation; see verification.
+MP3, WAV, M4A, OGG, FLAC, MP4, AAC, and WMA are offered by the file picker. Actual support depends on the included FFmpeg decoders; encrypted/DRM media is not supported. Original WAV examples and decoding of MP3, M4A and FLAC are covered by native acceptance checks. Other formats need format-specific validation; see verification.
 
 ## What the tool does and where review matters
 
@@ -32,7 +32,7 @@ There is currently no cancellation button. Closing is deferred while a job runs.
 
 ## Try an original example
 
-[examples/](examples/README.md) contains short original MSA and Egyptian-worded scripts, synthetic WAVs, provenance, and example SRTs. The synthetic Arabic voice is not an authentic Egyptian pronunciation benchmark. It tests the actual pipeline and text preservation; timing quality still needs listening review.
+[Download the small example ZIP](https://github.com/elkholasa1111-glitch/ArabicAligner/releases/download/v1.2.0-beta.1/ArabicAligner_Examples_1.2.0-beta.1.zip), or browse [examples/](examples/README.md). The directory contains short original MSA and Egyptian-worded scripts, synthetic WAVs, provenance, and example SRTs. The synthetic Arabic voice is not an authentic Egyptian pronunciation benchmark. It tests the actual pipeline and text preservation; timing quality still needs listening review.
 
 ```sh
 python run.py --cli -a examples/msa.wav -t examples/msa.txt -o example.srt --model small

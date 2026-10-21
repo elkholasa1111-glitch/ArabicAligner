@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.2.0-beta.1 — first public cross-platform preview
+## 1.2.0-beta.1 — 2026-10-22 — first public cross-platform preview
 
 - Import the existing Windows and Intel macOS sources into one reviewed project.
 - Preserve Windows small/large-v3-turbo and macOS small-only editions.
@@ -14,6 +14,9 @@
 - Split short cues at long pauses and avoid merging across those pauses.
 - Let macOS source checkouts discover their prepared platform-specific model directory.
 - Expose the existing CLI through the packaged `--cli` entry point.
+- Keep Windows native standard handles and terminal diagnostics while hiding the desktop launch console.
+- Release Windows Ruy worker contexts before DLL TLS teardown; verify real model teardown before packaging.
+- Enable runtime-dispatched Intel Ruy kernels with modern Apple Clang on Mac.
 
 This is a preview, not a claim of independent timing accuracy or broad adoption.
 The final release notes and verification records list the builds actually tested.

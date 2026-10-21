@@ -1,0 +1,3 @@
+# Actual example SRT outputs
+
+These files were exported by the installed native preview using the original CC0 scripts and synthetic audio in [examples](../../examples/README.md). Their reference text is preserved; timing is an observed model result requiring listening review. They are not independently certified word alignments or an authentic Egyptian dialect benchmark. The underlying original example text and these demonstration outputs are dedicated under the [example CC0 terms](../../examples/LICENSE-CC0.txt). See [verification](../VERIFICATION.md) for exact native environments, processing results and limitations.

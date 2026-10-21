@@ -6,12 +6,12 @@
 
 ## ابدأ من هنا
 
-الإصدار العام الموحد الأول **1.2.0-beta.1 تجريبي**. افتح [Releases](https://github.com/elkholasa1111-glitch/ArabicAligner/releases) وحمّل ملف نظامك عندما يكون منشورًا بالفعل. عدم وجود ملف لنظام معين يعني أنه لم يُتح بعد. الملفات المصدرية المضغوطة ليست مثبتات.
+الإصدار العام الموحد الأول **[1.2.0-beta.1 تجريبي](https://github.com/elkholasa1111-glitch/ArabicAligner/releases/tag/v1.2.0-beta.1)**. حمّل ملف نظامك من الجدول التالي. الملفات المصدرية المضغوطة ليست مثبتات؛ نتائج الاختبار وملفات SRT الفعلية ولقطات التطبيق مسجلة في [التحقق](docs/VERIFICATION.md).
 
 | النظام | الملف | النماذج |
 | --- | --- | --- |
-| Windows x64 | `ArabicAligner_1.2.0-beta.1_Windows_x64_Setup.exe` | small السريع وlarge-v3-turbo |
-| macOS Intel x86_64 | `ArabicAligner_1.2.0-beta.1_macOS_Intel.dmg` | small السريع فقط |
+| Windows x64 | [ArabicAligner_1.2.0-beta.1_Windows_x64_Setup.exe](https://github.com/elkholasa1111-glitch/ArabicAligner/releases/download/v1.2.0-beta.1/ArabicAligner_1.2.0-beta.1_Windows_x64_Setup.exe) | small السريع وlarge-v3-turbo |
+| macOS Intel x86_64 | [ArabicAligner_1.2.0-beta.1_macOS_Intel.dmg](https://github.com/elkholasa1111-glitch/ArabicAligner/releases/download/v1.2.0-beta.1/ArabicAligner_1.2.0-beta.1_macOS_Intel.dmg) | small السريع فقط |
 
 Windows غير موقّع بشهادة. تطبيق الماك بتوقيع محلي ad-hoc، دون Developer ID أو notarization. ليس universal ولم يُختبر Apple Silicon أو Linux أو Windows ARM. هدف البناء Windows 10/11 x64 وmacOS 15 فأحدث، لكن النسخ المختبرة فعلًا مسجلة في [التحقق](docs/VERIFICATION.md). الاختبار على Mac Intel حديث لا يثبت الأداء على MacBook Air 2015؛ يلزم تجربته على الجهاز نفسه.
 
@@ -33,3 +33,5 @@ Windows غير موقّع بشهادة. تطبيق الماك بتوقيع مح�
 كود التطبيق الأصلي مرخّص MIT؛ المثبت ككل ليس MIT. المكتبات والنماذج لها تراخيص منفصلة موضحة في [الإشعارات](LICENSES.md) و[تعليمات المصدر والاستبدال](docs/LICENSING.md). لا يوجد ضمان استجابة للدعم .
 
 تطبيق الماك داخل DMG اسمه `ArabicAligner Preview.app` حتى يمكن إبقاؤه بجانب النسخة القديمة. اختصارات Windows التجريبية تحمل Preview أيضًا.
+
+للتجربة دون إعداد بيئة تطوير: [حمّل العينات الأصلية القصيرة](https://github.com/elkholasa1111-glitch/ArabicAligner/releases/download/v1.2.0-beta.1/ArabicAligner_Examples_1.2.0-beta.1.zip)، ثم افتح WAV وTXT من مجلد examples داخل الملف المضغوط.
