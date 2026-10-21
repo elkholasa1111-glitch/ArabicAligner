@@ -1,0 +1,44 @@
+--- a/compat/windows/makedef
++++ b/compat/windows/makedef
+@@ -27,6 +27,11 @@
+ vscript=$1
+ shift
+ 
++# Read a make-generated object response file without a long Windows argv.
++if [ "$#" -eq 1 ] && [ "${1#@}" != "$1" ]; then
++    set -- $(cat "${1#@}")
++fi
++
+ if [ ! -f "$vscript" ]; then
+     echo "Version script does not exist" >&2
+     exit 1
+@@ -43,7 +48,7 @@
+ # It's just much easier to do it this way
+ libname=$(mktemp -u "library").lib
+ 
+-trap 'rm -f -- $libname' EXIT
++trap 'rm -f -- $libname ${libname}.rsp' EXIT
+ 
+ if [ -n "$AR" ]; then
+     $AR rcs ${libname} $@ >/dev/null
+@@ -54,7 +59,8 @@
+         machine_flag="-machine:arm64ec"
+         ;;
+     esac
+-    lib.exe ${machine_flag} -out:${libname} $@ >/dev/null
++    printf '%s\n' "$@" > "${libname}.rsp"
++    lib.exe ${machine_flag} -out:${libname} @${libname}.rsp >/dev/null
+ fi
+ if [ $? != 0 ]; then
+     echo "Could not create temporary library." >&2
+--- a/ffbuild/library.mak
++++ b/ffbuild/library.mak
+@@ -77,7 +77,7 @@
+ $(SUBDIR)$(SLIBNAME_WITH_MAJOR): $(OBJS) $(SHLIBOBJS) $(SUBDIR)lib$(NAME).ver
+ 	$(SLIB_CREATE_DEF_CMD)
+ ifeq ($(RESPONSE_FILES),yes)
+-	$(Q)echo $$(filter %.o,$$^) > $$@.objs
++	$$(file >$$@.objs,$$(filter %.o,$$^))
+ 	$$(call LINK,$$(call $(NAME)LINK_SO_ARGS) $$(LD_O) @$$@.objs $$(call $(NAME)LINK_EXTRA))
+ else
+ 	$$(call LINK,$$(call $(NAME)LINK_SO_ARGS) $$(LD_O) $$(filter %.o,$$^) $$(call $(NAME)LINK_EXTRA))

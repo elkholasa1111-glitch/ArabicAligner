@@ -107,6 +107,37 @@ def main():
                       "--extra-ldflags=-mmacosx-version-min=13.0"]
         script = 'exec ./configure "$@"'
     run([bash, "--noprofile", "--norc", "-c", script, "_", *configure], cwd=ffmpeg, env=environment)
+    if sys.platform == 'win32':
+        # Feed makedef the exact make OBJS list via a response file. Windows
+        # truncates the all-decoder object argv; codec behavior stays unchanged.
+        definition = ffmpeg / 'compat/windows/makedef'
+        source = definition.read_text()
+        replacements = [
+            ('shift\n\nif [ ! -f', 'shift\n\n# Read a make-generated object response file without a long Windows argv.\nif [ "$#" -eq 1 ] && [ "${1#@}" != "$1" ]; then\n    set -- $(cat "${1#@}")\nfi\n\nif [ ! -f'),
+            ("trap 'rm -f -- $libname' EXIT", "trap 'rm -f -- $libname ${libname}.rsp' EXIT"),
+            ('    lib.exe ${machine_flag} -out:${libname} $@ >/dev/null',
+             '    printf \'%s\\n\' "$@" > "${libname}.rsp"\n    lib.exe ${machine_flag} -out:${libname} @${libname}.rsp >/dev/null'),
+        ]
+        for before, after in replacements:
+            if before not in source:
+                raise RuntimeError('Unexpected makedef source; review the pinned patch')
+            source = source.replace(before, after, 1)
+        definition.write_text(source, newline='\n')
+        config = ffmpeg / 'ffbuild/config.mak'
+        lines = config.read_text().splitlines()
+        for index, line in enumerate(lines):
+            if line.startswith('SLIB_CREATE_DEF_CMD='):
+                if '$(OBJS)' not in line:
+                    raise RuntimeError('Unexpected Windows export recipe')
+                lines[index] = line.replace('$(OBJS)', '$(file >$(SUBDIR)makedef.rsp,$(OBJS)) @$(SUBDIR)makedef.rsp')
+        config.write_text('\n'.join(lines) + '\n', newline='\n')
+        library_makefile = ffmpeg / 'ffbuild/library.mak'
+        source = library_makefile.read_text()
+        old = '$(Q)echo $$(filter %.o,$$^) > $$@.objs'
+        new = '$$(file >$$@.objs,$$(filter %.o,$$^))'
+        if old not in source:
+            raise RuntimeError('Unexpected response-file recipe')
+        library_makefile.write_text(source.replace(old, new), newline='\n')
     # Fresh Windows builds do not need incremental .d files. MSVC's generated
     # awk depfile recipe loses a backslash with this upstream configure/make
     # combination; disable only depfile generation, not compilation or checks.
