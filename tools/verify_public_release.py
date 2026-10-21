@@ -1,0 +1,85 @@
+"""Stream public downloads without authentication and verify their full hashes."""
+import argparse
+from concurrent.futures import ThreadPoolExecutor
+import hashlib
+import json
+from pathlib import Path
+import re
+import time
+import urllib.request
+
+REPO = 'elkholasa1111-glitch/ArabicAligner'
+
+
+def request(url):
+    # No GitHub token, cookie jar, credential helper or signed-in browser.
+    return urllib.request.urlopen(urllib.request.Request(url, headers={
+        'User-Agent': 'ArabicAligner-anonymous-release-verification'}), timeout=90)
+
+
+def get_json(path):
+    with request('https://api.github.com/repos/' + REPO + '/' + path) as stream:
+        return json.load(stream)
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--tag', required=True)
+    parser.add_argument('--expected-commit', required=True)
+    parser.add_argument('--output', default='verification/public-download-verification.json')
+    args = parser.parse_args()
+    if not re.fullmatch(r'v[0-9]+\.[0-9]+\.[0-9]+(?:-[a-zA-Z0-9.-]+)?', args.tag):
+        raise ValueError('Expected a version tag')
+    if not re.fullmatch(r'[a-f0-9]{40}', args.expected_commit):
+        raise ValueError('Expected a full reviewed source commit')
+    release = get_json('releases/tags/' + args.tag)
+    assert not release['draft']
+    assert get_json('git/ref/tags/' + args.tag)['object']['sha'] == args.expected_commit
+    assets = {x['name']: x for x in release['assets']}
+    expected = {}
+    for name in ('SHA256SUMS-win32.txt', 'SHA256SUMS-darwin.txt'):
+        with request(assets[name]['browser_download_url']) as stream:
+            for line in stream.read().decode().splitlines():
+                digest, filename = line.split('  ', 1)
+                if filename in expected and expected[filename] != digest:
+                    raise RuntimeError('Platform manifest disagreement: ' + filename)
+                expected[filename] = digest
+    names = sorted(name for name in assets if name.endswith(('_Setup.exe', '_Intel.dmg')))
+    assert len(names) == 2
+
+    def verify(name):
+        asset, digest, count = assets[name], hashlib.sha256(), 0
+        with request(asset['browser_download_url']) as stream:
+            status = stream.status
+            while chunk := stream.read(1024 * 1024):
+                digest.update(chunk)
+                count += len(chunk)
+        actual = digest.hexdigest()
+        assert status == 200 and count == asset['size'] and actual == expected[name]
+        if asset.get('digest'):
+            assert asset['digest'] == 'sha256:' + actual
+        return {'name': name, 'url': asset['browser_download_url'], 'http_status': status,
+                'bytes': count, 'sha256': actual, 'authenticated': False}
+
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        binaries = list(pool.map(verify, names))
+    documents = []
+    for name in ('README.md', 'README.ar.md'):
+        url = 'https://raw.githubusercontent.com/' + REPO + '/main/' + name
+        with request(url) as stream:
+            assert stream.status == 200 and len(stream.read()) > 100
+            documents.append({'url': url, 'status': stream.status})
+    result = {'date_utc': time.strftime('%Y-%m-%dT%H:%M:%SZ', time.gmtime()),
+        'repo': REPO, 'tag': args.tag, 'source_commit': args.expected_commit,
+        'release_url': release['html_url'], 'published_at': release['published_at'],
+        'authenticated': False, 'method': 'Full HTTP response streamed into SHA-256, not only HEAD or metadata',
+        'binaries': binaries, 'documents': documents,
+        'download_accounting': 'These verification downloads are our own, not independent adoption.'}
+    path = Path(args.output)
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(result, indent=2), encoding='utf-8')
+    print(json.dumps(result, indent=2))
+
+
+if __name__ == '__main__':
+    main()
