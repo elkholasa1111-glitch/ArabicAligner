@@ -16,8 +16,13 @@ def inspect(root):
         if not path.is_file() or path.is_symlink():
             continue
         relative = path.relative_to(root).as_posix()
-        if any(name in relative for name in forbidden) or path.suffix.lower() in ('.pem', '.key', '.pfx', '.p12'):
+        if any(name in relative for name in forbidden) or path.suffix.lower() in ('.key', '.pfx', '.p12'):
             raise RuntimeError('Unexpected payload component: ' + relative)
+        if path.suffix.lower() == '.pem':
+            import certifi
+            data = path.read_bytes()
+            if path.name != 'cacert.pem' or data != Path(certifi.where()).read_bytes() or b'PRIVATE KEY' in data:
+                raise RuntimeError('Unreviewed PEM payload: ' + relative)
         files.append({'path': relative, 'bytes': path.stat().st_size})
         if any(x in path.name.upper() for x in ('LICENSE', 'COPYING', 'NOTICE')):
             notices.append({'path': relative, 'sha256': hashlib.sha256(path.read_bytes()).hexdigest()})

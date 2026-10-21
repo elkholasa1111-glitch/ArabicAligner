@@ -11,6 +11,7 @@ The original application is licensed under [MIT](LICENSE), copyright Elkholasa. 
 | faster-whisper 1.2.1 | MIT; https://github.com/SYSTRAN/faster-whisper |
 | CTranslate2 4.8.2 | MIT; https://github.com/OpenNMT/CTranslate2 |
 | ONNX Runtime 1.23.2 | MIT and bundled third-party notices; https://github.com/microsoft/onnxruntime |
+| Bundled Silero VAD ONNX model from faster-whisper | MIT, Silero Team; https://github.com/snakers4/silero-vad; notice under third_party/licenses |
 | NumPy 1.26.4 | BSD-3-Clause and bundled native-library notices; https://numpy.org/doc/1.26/license.html |
 | tokenizers 0.23.2 | Apache-2.0; https://github.com/huggingface/tokenizers |
 | huggingface_hub 1.31.0 | Apache-2.0; https://github.com/huggingface/huggingface_hub |

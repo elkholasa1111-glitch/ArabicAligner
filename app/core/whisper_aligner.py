@@ -20,6 +20,8 @@ def _bundled_hf_cache() -> str | None:
     import os, sys
     from app.resources import resource_roots
     cands = [str(root / "offline_assets" / "models") for root in resource_roots()]
+    if sys.platform == 'darwin' and not getattr(sys, 'frozen', False):
+        cands += [str(root / 'offline_assets-macos' / 'models') for root in resource_roots()]
     # Source-only opt-in for contributors reusing a deliberately selected cache.
     # Frozen releases always load their own files, even if this variable is set.
     if not getattr(sys, "frozen", False) and os.environ.get("ARABICALIGNER_MODELS_DIR"):

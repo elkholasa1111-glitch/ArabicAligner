@@ -60,6 +60,17 @@ class BehaviorRegressions(unittest.TestCase):
                     patch("app.resources.resource_roots", return_value=[]):
                 self.assertIsNone(_bundled_hf_cache())
 
+    def test_macos_source_finds_its_prepared_platform_assets(self):
+        with tempfile.TemporaryDirectory() as temp:
+            cache = Path(temp) / 'offline_assets-macos/models'
+            cache.mkdir(parents=True)
+            (cache / 'model-marker').mkdir()
+            with patch.object(sys, 'platform', 'darwin'), \
+                    patch.object(sys, 'frozen', False, create=True), \
+                    patch.dict(os.environ, {'ARABICALIGNER_MODELS_DIR': ''}), \
+                    patch('app.resources.resource_roots', return_value=[Path(temp)]):
+                self.assertEqual(_bundled_hf_cache(), str(cache))
+
 
 if __name__ == "__main__":
     unittest.main()

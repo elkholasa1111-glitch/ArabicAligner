@@ -12,6 +12,7 @@
 - Build controlled FFmpeg/PyAV media dependencies for redistribution rather than
   treating existing opaque GPL-enabled executable bundles as MIT.
 - Split short cues at long pauses and avoid merging across those pauses.
+- Let macOS source checkouts discover their prepared platform-specific model directory.
 - Expose the existing CLI through the packaged `--cli` entry point.
 
 This is a preview, not a claim of independent timing accuracy or broad adoption.
