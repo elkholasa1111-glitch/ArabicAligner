@@ -40,7 +40,7 @@ class BundleResources(unittest.TestCase):
             with patch("app.core.audio.resource_roots", return_value=[Path(temp)]), \
                     patch("app.core.audio.sys.platform", "darwin"), \
                     patch("app.core.audio.shutil.which", return_value=None), \
-                    patch("imageio_ffmpeg.get_ffmpeg_exe", side_effect=RuntimeError("not used")):
+                    patch.dict(sys.modules, {"imageio_ffmpeg": None}):
                 self.assertEqual(_candidate_ffmpegs(), [str(binary)])
 
     def test_no_duplicate_resource_roots(self):
