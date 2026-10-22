@@ -7,7 +7,7 @@ on:
         required: true
         default: v1.2.0-beta.1
       expected_commit:
-        description: Full native-tested commit at that lightweight release tag
+        description: Full public release-tag commit; see the release source record
         required: true
 permissions:
   contents: read

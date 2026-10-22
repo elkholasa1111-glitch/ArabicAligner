@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Record release-source equivalence after normalizing publisher metadata and documentation.
+
 - Add an installation and usage guide with packaged CLI examples and checksum commands.
 - Put direct downloads, native screenshots, example SRTs, and tested platform requirements in both introductions.
 - Document maintainership and code review ownership, and add a usage-question issue form.

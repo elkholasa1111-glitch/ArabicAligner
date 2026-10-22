@@ -21,6 +21,6 @@ Repository maintenance and rights ownership are distinct from file-level authors
 
 ## Public source scope
 
-The public source starts with a reviewed import. Original source snapshots, private repositories, and earlier installers remain preserved. No original repository was deleted, force-pushed, or rewritten for publication.
+The public source starts with a reviewed import. Original private repositories, source snapshots, and earlier installers remain archived. Public publisher metadata and owned documentation were normalized on 2026-10-22, preserving recorded work dates, commit messages, runtime/build sources, and third-party notices. The [release source record](SOURCE-RECORD.md) relates the public tag to the original native build evidence.
 
 Public examples have documented origins and redistribution terms in [examples](../examples/README.md). A previous speech fixture with unconfirmed redistribution provenance was excluded. Private recordings and operational data remain outside the public repository. Dependency and model redistribution are documented in [Licensing](LICENSING.md).

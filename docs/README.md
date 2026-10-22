@@ -6,6 +6,7 @@
 - [Troubleshooting](TROUBLESHOOTING.md): security prompts, inputs, local logs, and privacy.
 - [Examples](../examples/README.md): original redistributable text and synthetic audio.
 - [Actual SRT outputs](demo/README.md): outputs from the installed applications.
+- [Release source record](SOURCE-RECORD.md): public source and native build-record equivalence.
 - [Verification](VERIFICATION.md): tested systems, native evidence, and known limits.
 
 ## Develop and contribute

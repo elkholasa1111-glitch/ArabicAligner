@@ -1,6 +1,6 @@
 # Release verification
 
-Version **1.2.0-beta.1**, preview. Native binary source commit: `cb13e4a1c6363845ed5fcaff7248b5955aea690d`. Both platform packages were built and exercised from this exact source. Documentation may subsequently be updated on main; the release tag retains the tested application source.
+Version **1.2.0-beta.1**, preview. Native build records identify `cb13e4a1c6363845ed5fcaff7248b5955aea690d`. The current public release tag points to `964d49f99306f1309edc8b9d8810c7a7b9cb6d8e` after publisher-metadata and documentation normalization. Runtime/build sources and fixtures are byte-identical; [the source record](SOURCE-RECORD.md) provides file hashes and explains the original build revision. The packages were not rebuilt during this normalization.
 
 Tests completed on 2026-10-22 Cairo (2026-10-21 UTC). Full environment, dependency freeze, native/configuration and license inventory, source-build records, redacted secret-scan review, actual PNG/SRT outputs and installed-copy summaries are in `verification-win32.zip` and `verification-darwin.zip` on the [release](https://github.com/elkholasa1111-glitch/ArabicAligner/releases/tag/v1.2.0-beta.1).
 
