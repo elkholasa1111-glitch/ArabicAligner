@@ -50,6 +50,8 @@ Mac enables Ruy's runtime-dispatched x86 kernels with the modern Apple compiler,
 
 ## CI links
 
+- [Windows/Intel macOS source checks and history scan after publication normalization](https://github.com/elkholasa1111-glitch/ArabicAligner/actions/runs/39844997813).
+- [Fresh full anonymous package downloads and SHA-256 verification](https://github.com/elkholasa1111-glitch/ArabicAligner/actions/runs/39845217146), with the [dated result](https://github.com/elkholasa1111-glitch/ArabicAligner/releases/download/v1.2.0-beta.1/public-download-verification-20261022.json).
 - [Windows x64 native build and installed-copy acceptance](https://github.com/elkholasa1111-glitch/ArabicAligner/actions/runs/39693697565).
 - [macOS Intel native build and installed-copy acceptance](https://github.com/elkholasa1111-glitch/ArabicAligner/actions/runs/39693703668).
 - [Fresh source regressions and history scan](https://github.com/elkholasa1111-glitch/ArabicAligner/actions/runs/39693681114).
