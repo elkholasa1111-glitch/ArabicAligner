@@ -1,0 +1,26 @@
+name: Usage question
+description: Ask about installation, models, alignment, or SRT export
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Check the user guide and troubleshooting first. This is public: use bundled examples and remove private paths, recordings, transcripts, and account details.
+  - type: input
+    id: version
+    attributes:
+      label: Release version and operating system
+      placeholder: 1.2.0-beta.1, Windows x64 or macOS Intel, OS version
+    validations:
+      required: true
+  - type: textarea
+    id: question
+    attributes:
+      label: What are you trying to do?
+      description: Describe the step you reached and what you need help with.
+    validations:
+      required: true
+  - type: textarea
+    id: tried
+    attributes:
+      label: What have you tried?
+      description: Include relevant documentation and a short sanitized message if applicable.

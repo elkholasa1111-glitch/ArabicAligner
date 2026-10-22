@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Add an installation and usage guide with packaged CLI examples and checksum commands.
+- Put direct downloads, native screenshots, example SRTs, and tested platform requirements in both introductions.
+- Document maintainership and code review ownership, and add a usage-question issue form.
+- Clarify maintenance responsibilities, source provenance, and contributor attribution.
+
 ## 1.2.0-beta.1 — 2026-10-22 — first public cross-platform preview
 
 - Import the existing Windows and Intel macOS sources into one reviewed project.

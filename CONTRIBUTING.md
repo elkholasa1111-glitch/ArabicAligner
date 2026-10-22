@@ -1,26 +1,38 @@
-# Contributing
+# Contributing to ArabicAligner
 
-ArabicAligner is maintained by Mahmoud Hussein Attay Elsayed for Elkholasa.
-Contributions are welcome through GitHub issues and pull requests. There is no
-promised response time and no separate maintenance team is implied.
+Bug reports, clearer instructions, redistributable Arabic examples, regressions, and packaging improvements all help. ArabicAligner is maintained by [Mahmoud Hussein Attay Elsayed](MAINTAINERS.md) for Elkholasa.
 
-Read [development](docs/DEVELOPMENT.md), [architecture](docs/ARCHITECTURE.md),
-and [licensing](docs/LICENSING.md) before changing the application or packaging.
-Keep changes small. Preserve Arabic reference text, diacritics, monotonic cue
-times, offline inference, and the platform-specific model selections.
+Follow the [community conduct guidelines](CODE_OF_CONDUCT.md) in project discussions.
 
-Run `python tests/test_smoke.py` and
-`python -m unittest discover -s tests -p "test_regression*.py"` before submitting.
-For a timing bug, add a small deterministic regression using invented words and
-timestamps. For audio changes, use a redistributable fixture with a documented
-origin and test the complete audio + original reference -> SRT path.
+## Before changing the code
 
-Include the OS, architecture, commands, and actual results in a pull request.
-Do not claim macOS, Windows, Apple Silicon, or offline acceptance from a test on
-another platform. Package builds are intentional release operations, not PR jobs.
+Check existing issues and the [roadmap](docs/ROADMAP.md). For a substantial change, open a feature request describing the user problem and expected behavior first. Read [Development](docs/DEVELOPMENT.md), [Architecture](docs/ARCHITECTURE.md), and [Licensing](docs/LICENSING.md).
 
-Do not attach private recordings, transcripts, keys, account details, model
-weights, build environments, or local diagnostic dumps to public issues.
-By contributing, you confirm that you have permission to contribute the change
-under its applicable license. Original application changes use MIT; preserve
-third-party notices and identify copied material explicitly.
+Preserve these behaviors:
+
+- Keep supplied Arabic words and diacritics in the SRT.
+- Keep subtitle times valid, ordered, and nonoverlapping.
+- Keep processing local and preserve platform-specific model selections.
+- Keep dependency licenses, source availability, and fixture provenance accurate.
+
+## Check a change
+
+With the development environment installed:
+
+```sh
+python tests/test_smoke.py
+python -m unittest discover -s tests -v
+python tools/check_source.py
+```
+
+Headless GUI tests use `QT_QPA_PLATFORM=offscreen`. Native package acceptance uses the real OS plugin and model inference; source tests alone do not verify an installed application.
+
+For a timing bug, add a deterministic regression using invented words and timestamps. For audio changes, use a redistributable fixture with documented provenance and check the complete audio + original reference text → SRT path. State the actual OS, architecture, model, command, and result. Keep untested platforms explicit.
+
+## Submit a pull request
+
+Describe the problem, resulting behavior, and validation. Keep the diff focused and explain platform or model differences. The maintainer reviews and accepts changes; package builds are deliberate release operations, separate from untrusted PR jobs.
+
+Review and test your contribution before submission. Commit identities and attribution should reflect the people or organizations responsible; preserve existing notices and identify copied code and its license.
+
+By contributing, you confirm permission to submit the material under its applicable license. Owned application changes use MIT. New examples need explicit redistribution terms and a documented origin. Keep private recordings, scripts, credentials, account details, weights, build environments, and diagnostic archives out of public PRs and issues. Follow [Security](SECURITY.md) for sensitive reports.

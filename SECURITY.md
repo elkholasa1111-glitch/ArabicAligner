@@ -11,8 +11,8 @@ If this facility is unavailable, open a public issue asking for a private
 reporting channel without including the vulnerability, recordings, credentials,
 or exploit material. Do not publish secrets or customer data.
 
-This project currently has one self-identified maintainer. There is no security
-response SLA. Only the current preview release receives fixes; older private
+The [primary maintainer](MAINTAINERS.md) coordinates security reports. There is
+no published security response SLA. Only the current preview release receives fixes; older private
 Windows/macOS installers remain historical versions, not supported releases.
 
 Release hashes detect transfer corruption. They do not replace publisher

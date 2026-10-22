@@ -1,11 +1,14 @@
-# Getting help
+# Support
 
-Start with [README](README.md), [العربية](README.ar.md), and
-[troubleshooting](docs/TROUBLESHOOTING.md). Search existing GitHub issues, then
-open a bug report with the release version, OS, architecture, chosen model, and
-reproduction steps using a small example you can legally share.
+Start with the [user guide](docs/USAGE.md), [Arabic introduction](README.ar.md), and [troubleshooting](docs/TROUBLESHOOTING.md).
 
-Never post private audio, personal transcripts, full diagnostic archives, account
-emails, or secrets. A minimal synthetic example is preferable. The published
-contact channel is GitHub Issues; no email address or response commitment is
-authorized by this document. Security issues follow [SECURITY.md](SECURITY.md).
+| Need | Where to go |
+| --- | --- |
+| Installation, model choice, or using the output | [Ask a usage question](https://github.com/elkholasa1111-glitch/ArabicAligner/issues/new?template=question.yml) |
+| A reproducible error or incorrect behavior | [File a bug report](https://github.com/elkholasa1111-glitch/ArabicAligner/issues/new?template=bug_report.yml) |
+| A workflow improvement or new capability | [Request a feature](https://github.com/elkholasa1111-glitch/ArabicAligner/issues/new?template=feature_request.yml) |
+| A sensitive security vulnerability | Follow [Security](SECURITY.md) and report privately |
+
+Search [existing issues](https://github.com/elkholasa1111-glitch/ArabicAligner/issues) first. Include the release, OS version, architecture, model, and reproduction steps. Reproducing the problem with the [original examples](examples/README.md) makes it easier to investigate.
+
+Issues are public. Share only a small redistributable example and sanitized error. Keep private audio, scripts, full diagnostic archives, account emails, and secrets out of reports. Support is provided through GitHub Issues without a response-time commitment; see [Maintainership](MAINTAINERS.md).
